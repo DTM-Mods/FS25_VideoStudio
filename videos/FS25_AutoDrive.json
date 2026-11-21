@@ -1,0 +1,85 @@
+{
+    "mod": "FS25_AutoDrive",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsEnter",
+        "vsLight golden",
+        "vsShot ui dur=9 keys=lalt+num0 at=1.5",
+        "vsShot ui dur=10 keys=ctrl+lalt+i at=1.5",
+        "vsShot ui dur=4 keys=esc at=2",
+        "vsShot ui dur=10 keys=ctrl+lalt+n at=1.5",
+        "vsShot ui dur=4 keys=esc,lalt+num0 at=2",
+        "vsLight off"
+    ],
+    "title": "AutoDrive Overdrive",
+    "kicker": "Farming Simulator 25 mod: AutoDrive, overdriven",
+    "thumbnail": {
+        "text": "AutoDrive Overdrive",
+        "accent": "Overdrive"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "A new HUD",
+                "text": "A fresh look, an Overdrive settings tab, a ticker along the bottom."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Left Alt",
+                        "Num 0"
+                    ],
+                    "label": "AutoDrive HUD",
+                    "at": 1.2
+                }
+            ],
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Fleet overview",
+                "text": "Every AutoDrive vehicle: Send to..., statistics, and on the big map."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Ctrl",
+                        "Alt",
+                        "I"
+                    ],
+                    "label": "Fleet",
+                    "at": 1.2
+                }
+            ]
+        },
+        "ui#4": {
+            "caption": {
+                "step": 3,
+                "heading": "Route check",
+                "text": "Finds problems in the network, shows them, fixes them."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Ctrl",
+                        "Alt",
+                        "N"
+                    ],
+                    "label": "Route check",
+                    "at": 1.2
+                }
+            ]
+        },
+        "ui#5": {
+            "caption": {
+                "step": 4,
+                "heading": "And the editor",
+                "text": "Undo and redo, drag waypoints, tidy tools, speed zones, waypoint actions."
+            }
+        }
+    },
+    "target": "Condor"
+}

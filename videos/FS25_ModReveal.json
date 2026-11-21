@@ -1,0 +1,96 @@
+{
+    "mod": "FS25_ModReveal",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsMenu",
+        "vsLight golden",
+        "vsShot ui dur=8 keys=lalt+i at=1.5",
+        "vsShot ui dur=9 keys=down,down,down at=1 keys2=right at2=5",
+        "vsShot ui dur=8 keys=right at=1.5 keys2=right at2=4.5",
+        "vsShot ui dur=6 keys=esc at=3.5",
+        "vsLight off"
+    ],
+    "title": "Mod Reveal",
+    "kicker": "Farming Simulator 25 mod: every mod at a glance",
+    "thumbnail": {
+        "text": "Every mod at a glance",
+        "accent": "at a glance"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Open Mod Reveal",
+                "text": "Every active mod: version, author, file; NO MP and duplicates tagged."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Left Alt",
+                        "I"
+                    ],
+                    "label": "Mod Reveal",
+                    "at": 1.2
+                }
+            ],
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Details",
+                "text": "Hash, specializations and store items of the selected mod."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "↓"
+                    ],
+                    "label": "Select a mod",
+                    "at": 0.8
+                },
+                {
+                    "keys": [
+                        "→"
+                    ],
+                    "label": "Next tab",
+                    "at": 4.8
+                }
+            ]
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "DLC, not used, changes",
+                "text": "What changed since last time: updated, added, removed, rebuilt."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "←",
+                        "→"
+                    ],
+                    "label": "Tabs",
+                    "at": 1.2
+                }
+            ]
+        },
+        "ui#4": {
+            "caption": {
+                "step": 4,
+                "heading": "Save the list",
+                "text": "SAVE LIST writes ModList.txt and .csv to share."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Esc"
+                    ],
+                    "label": "Close",
+                    "at": 3.2
+                }
+            ]
+        }
+    }
+}

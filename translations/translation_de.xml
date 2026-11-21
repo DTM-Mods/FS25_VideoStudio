@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="input_VS_SHOWCASE" text="Videostudio: Vorstellung (eine Reihe Kamerafahrten)"/>
+        <text name="input_VS_ORBIT" text="Videostudio: einmal rundherum"/>
+        <text name="input_VS_FOLLOW" text="Videostudio: Verfolgerkamera beim Fahren (an/aus)"/>
+        <text name="input_VS_LIGHT" text="Videostudio: Licht (goldene Stunde, Nebel, Mittag, bewölkt, Morgengrauen, Nacht, aus)"/>
+        <text name="input_VS_STOP" text="Videostudio: Stopp"/>
+    </texts>
+</l10n>

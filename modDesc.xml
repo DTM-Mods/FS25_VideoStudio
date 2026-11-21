@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<modDesc descVersion="116" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://validation.gdn.giants-software.com/xml/fs25/modDesc.xsd">
+    <author>DTM Mods, Fennell</author>
+    <version>0.1.0.16</version>
+    <title>
+        <en>DTM Video Studio</en>
+        <de>DTM Videostudio</de>
+    </title>
+    <description>
+        <en><![CDATA[A tool for modders: cinematic camera moves for videos of your mod (YouTube, your website), played by the game. Single player only.
+
+Right Shift + 1: showcase. A set of camera moves around what you sit in (with everything attached), the target, or the nearest building.
+Right Shift + 2: one slow 360 degree orbit.
+Right Shift + 3: chase camera while you drive; again to stop.
+Right Shift + 4: light. Golden hour, morning mist, midday, overcast, dawn, night; after the last one the old time comes back.
+Right Shift + 0: stop.
+
+The game doesn't record video: the Video Studio tools record the game window and cut the clips. Each clip starts and ends with a colored card the tools find in the recording.
+
+Console: vsShot <shot> [options], vsShots, vsShowcase [vehicle|quick|building|work], vsStop, vsLight [preset] [hour], vsWeather, vsVehicleLights, vsDrive <km/h>|stop, vsWork on|off, vsTarget [name], vsList [name], vsEnter [name], vsMenu [name], vsKeys, vsFolder, vsFov, vsQuiet, vsClear, vsRadius.]]></en>
+        <de><![CDATA[Ein Werkzeug für Modder: filmische Kamerafahrten für Videos deiner Mod (YouTube, deine Webseite), vom Spiel gespielt. Nur Einzelspieler.
+
+Rechte Umschalt + 1: Vorstellung. Eine Reihe Kamerafahrten um das, worin du sitzt (mit allem Angehängten), das Ziel oder das nächste Gebäude.
+Rechte Umschalt + 2: eine langsame Fahrt einmal rundherum.
+Rechte Umschalt + 3: Verfolgerkamera, während du fährst; nochmal zum Beenden.
+Rechte Umschalt + 4: Licht. Goldene Stunde, Morgennebel, Mittag, bewölkt, Morgengrauen, Nacht; nach dem letzten kommt die alte Uhrzeit zurück.
+Rechte Umschalt + 0: Stopp.
+
+Das Spiel nimmt kein Video auf: die Video-Studio-Werkzeuge nehmen das Spielfenster auf und schneiden die Clips. Jeder Clip beginnt und endet mit einer farbigen Karte, die die Werkzeuge in der Aufnahme finden.
+
+Konsole: vsShot <Fahrt> [Optionen], vsShots, vsShowcase [vehicle|quick|building|work], vsStop, vsLight [Preset] [Stunde], vsWeather, vsVehicleLights, vsDrive <km/h>|stop, vsWork on|off, vsTarget [Name], vsList [Name], vsEnter [Name], vsMenu [Name], vsKeys, vsFolder, vsFov, vsQuiet, vsClear, vsRadius.]]></de>
+    </description>
+
+    <iconFilename>icon_videoStudio.png</iconFilename>
+    <multiplayer supported="false"/>
+    <l10n filenamePrefix="translations/translation"/>
+
+    <extraSourceFiles>
+        <sourceFile filename="scripts/VideoStudio.lua"/>
+    </extraSourceFiles>
+
+    <actions>
+        <action name="VS_SHOWCASE"/>
+        <action name="VS_ORBIT"/>
+        <action name="VS_FOLLOW"/>
+        <action name="VS_LIGHT"/>
+        <action name="VS_STOP"/>
+    </actions>
+
+    <inputBinding>
+        <actionBinding action="VS_SHOWCASE">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_1"/>
+        </actionBinding>
+        <actionBinding action="VS_ORBIT">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_2"/>
+        </actionBinding>
+        <actionBinding action="VS_FOLLOW">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_3"/>
+        </actionBinding>
+        <actionBinding action="VS_LIGHT">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_4"/>
+        </actionBinding>
+        <actionBinding action="VS_STOP">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_0"/>
+        </actionBinding>
+    </inputBinding>
+</modDesc>

@@ -1,0 +1,52 @@
+{
+    "mod": "FS25_BetterContracts",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsLight golden",
+        "vsShot ui dur=9 run=vsMenu:ingameMenuContracts at=0.3",
+        "vsShot ui dur=8 keys=down,down at=1.5 keys2=d at2=4.5",
+        "vsShot ui dur=7 keys=d at=2.5",
+        "vsShot ui dur=4 run=vsMenu:close at=2.5",
+        "vsLight off"
+    ],
+    "title": "Better Contracts",
+    "kicker": "Farming Simulator 25 mod: contracts you can compare",
+    "thumbnail": {
+        "text": "Compare every contract",
+        "accent": "every contract"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "A better contracts page",
+                "text": "Sort by type, revenue, farmer, net profit or profit per minute."
+            },
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Details per contract",
+                "text": "Estimated time, profit per minute, deliver or keep, the crop."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "D"
+                    ],
+                    "label": "Details on/off",
+                    "at": 4.2
+                }
+            ]
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Your rules",
+                "text": "Reward, lease cost, max active, contract types; an optional hard mode."
+            }
+        }
+    }
+}

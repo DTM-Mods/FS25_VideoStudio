@@ -1,0 +1,54 @@
+{
+    "mod": "FS25_Courseplay",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsEnter",
+        "vsLight golden",
+        "vsShot ui dur=10 keys=lalt+g at=1.5",
+        "vsShot ui dur=8 keys=e at=2",
+        "vsShot ui dur=4 keys=esc at=2",
+        "vsLight off"
+    ],
+    "title": "CourseCorrect",
+    "kicker": "Farming Simulator 25 mod: Courseplay, corrected",
+    "thumbnail": {
+        "text": "CourseCorrect",
+        "accent": "Correct"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "The Courseplay menu",
+                "text": "Settings > Global > HUD style = CourseCorrect switches it on."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Left Alt",
+                        "G"
+                    ],
+                    "label": "Courseplay menu",
+                    "at": 1.2
+                }
+            ],
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Course, saved, fleet",
+                "text": "A live map with progress and finish time; courses for this field first."
+            }
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Unloaders that come",
+                "text": "Go to combine and Call truck, with an AutoDrive leg; drives through what blocks it."
+            }
+        }
+    },
+    "target": "Condor"
+}

@@ -1,0 +1,97 @@
+{
+    "mod": "FS25_MonthlyExpenseSheet",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsLight golden",
+        "vsShot ui dur=8 keys=lalt+m at=1.5",
+        "vsShot ui dur=9 keys=down,down at=1.5 keys2=down,down at2=5",
+        "vsShot ui dur=8 keys=right at=1.5 keys2=q at2=5",
+        "vsShot ui dur=5 keys=esc at=3",
+        "vsLight off"
+    ],
+    "title": "Monthly Expense Sheet Pro Edition",
+    "kicker": "Farming Simulator 25 mod: where the money goes",
+    "thumbnail": {
+        "text": "Where does the money go?",
+        "accent": "money"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Open the sheet",
+                "text": "Every month, every category: count, total, last month, up or down."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Left Alt",
+                        "M"
+                    ],
+                    "label": "Expense sheet",
+                    "at": 1.2
+                }
+            ],
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Every single charge",
+                "text": "Date and time of each one; small ones merged."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "↑",
+                        "↓"
+                    ],
+                    "label": "Category",
+                    "at": 1.2
+                }
+            ]
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Income and other months",
+                "text": "Expenses and income side by side; 24 months kept."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "←",
+                        "→"
+                    ],
+                    "label": "Expenses / income",
+                    "at": 1.2
+                },
+                {
+                    "keys": [
+                        "Q",
+                        "E"
+                    ],
+                    "label": "Month",
+                    "at": 4.7
+                }
+            ]
+        },
+        "ui#4": {
+            "caption": {
+                "step": 4,
+                "heading": "Nothing missed",
+                "text": "Untracked balance changes get a line of their own."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Esc"
+                    ],
+                    "label": "Close",
+                    "at": 2.7
+                }
+            ]
+        }
+    }
+}

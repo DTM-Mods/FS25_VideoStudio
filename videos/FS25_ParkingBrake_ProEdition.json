@@ -1,0 +1,76 @@
+{
+    "mod": "FS25_ParkingBrake_ProEdition",
+    "kind": "script",
+    "save": 5,
+    "target": "Condor",
+    "steps": [
+        "vsEnter",
+        "vsLight golden",
+        "vsShot orbit dur=10",
+        "vsShot ui dur=7 keys=backslash at=2",
+        "vsShot ui dur=8 keys=w,w,w,w at=1.5",
+        "vsShot ui dur=7 keys=backslash at=2 keys2=w,w,w at2=4",
+        "vsLight off"
+    ],
+    "move": true,
+    "title": "Parking Brake Pro Edition",
+    "kicker": "Farming Simulator 25 mod: a real parking brake",
+    "thumbnail": {
+        "text": "A real parking brake",
+        "accent": "parking brake"
+    },
+    "sections": {
+        "orbit": {
+            "chapter": "Overview"
+        },
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Set the brake",
+                "text": "In any vehicle: a BRAKE light on the speedometer."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "\\"
+                    ],
+                    "label": "Parking brake",
+                    "at": 1.7
+                }
+            ],
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "It stays put",
+                "text": "Throttle does nothing, cruise control is off, a warning blinks."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "W"
+                    ],
+                    "label": "Trying to drive",
+                    "at": 1.2
+                }
+            ]
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Release and go",
+                "text": "Saved with the vehicle; helpers are never held back."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "\\"
+                    ],
+                    "label": "Release",
+                    "at": 1.7
+                }
+            ]
+        }
+    }
+}

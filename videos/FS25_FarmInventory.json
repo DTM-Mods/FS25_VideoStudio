@@ -1,0 +1,43 @@
+{
+    "mod": "FS25_FarmInventory",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsLight golden",
+        "vsShot ui dur=9 run=vsMenu:ingameMenuGameStats at=0.3 run2=vsTab:inventory at2=1.2",
+        "vsShot ui dur=9 keys=down,down,down at=1.5",
+        "vsShot ui dur=8 keys=down,down at=1.5",
+        "vsShot ui dur=4 run=vsMenu:close at=2.5",
+        "vsLight off"
+    ],
+    "title": "Farm Inventory Plus",
+    "kicker": "Farming Simulator 25 mod: everything you have in stock",
+    "thumbnail": {
+        "text": "Everything in stock",
+        "accent": "in stock"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "An INVENTORY tab",
+                "text": "Next to Prices: silos, feeding robots, bunkers, productions, animals."
+            },
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Prices beside it",
+                "text": "Where each good sells best, with its price history."
+            }
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Hide what you don't need",
+                "text": "Hide a location, show the hidden ones again any time."
+            }
+        }
+    }
+}

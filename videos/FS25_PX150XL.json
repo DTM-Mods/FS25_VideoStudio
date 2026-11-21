@@ -1,0 +1,14 @@
+{
+    "mod": "FS25_PX150XL",
+    "kind": "vehicle",
+    "save": 5,
+    "target": "PX150",
+    "plan": "showcase",
+    "title": "PX150 XL Windrower Pro Edition",
+    "thumbnail": {"text": "PX150 XL Windrower", "accent": "XL"},
+    "sections": {
+        "orbit": {"caption": {"heading": "15.2 m header", "text": "For the MacDon M1240, 2.45 t, sitting low at 0.30 m."}},
+        "pullback": {"caption": {"heading": "Fits the ground", "text": "Set to the ground once as it's attached, standing still."}},
+        "crane": {"caption": {"heading": "25% more yield", "text": "On alfalfa, clover, field grass and crops the combine leaves no straw from."}}
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "mod": "FS25_RopaTiger6S_ProEdition",
+    "kind": "vehicle",
+    "save": 5,
+    "target": "Tiger",
+    "plan": "showcase",
+    "title": "Ropa Tiger 6S Pro Edition",
+    "thumbnail": {"text": "Tiger 6S Pro Edition", "accent": "Pro Edition"},
+    "sections": {
+        "orbit": {"caption": {"heading": "Tiger 6S ProEdition", "text": "996 hp, a 57.5 m³ tank, window tint and logos to choose."}},
+        "pullback": {"caption": {"heading": "RR-XL 9x45 header", "text": "A matching ProEdition header, and a trailer to carry it."}},
+        "crane": {"caption": {"heading": "Far more than beet", "text": "Potatoes, carrots, parsnips, onions, spinach, peas, green beans and sugar cane."}},
+        "flyby": {"caption": {"heading": "Fixed for multiplayer", "text": "The unloading belts stop for everyone on the server."}}
+    }
+}

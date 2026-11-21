@@ -1,0 +1,69 @@
+{
+    "mod": "FS25_Searchables",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsLight golden",
+        "vsShot ui dur=10 keys=ctrl+f at=1.2 keys2=wheat at2=3.5",
+        "vsShot ui dur=8 keys=enter at=1.5",
+        "vsShot ui dur=9 keys=ctrl+f at=1 keys2=sell,space,wheat at2=3",
+        "vsShot ui dur=4 keys=esc,esc at=2",
+        "vsLight off"
+    ],
+    "title": "Searchables",
+    "kicker": "Farming Simulator 25 mod: find anything",
+    "thumbnail": {
+        "text": "Find anything",
+        "accent": "anything"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Where's my stuff?",
+                "text": "The map opens with the cursor in a search box; type and the arrows point the way."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Ctrl",
+                        "F"
+                    ],
+                    "label": "Search",
+                    "at": 1.0
+                }
+            ],
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Nearest first",
+                "text": "The nearest 8 are listed; Enter keeps the search and centres the map."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Enter"
+                    ],
+                    "label": "Keep it",
+                    "at": 1.3
+                }
+            ]
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Ask it things",
+                "text": "sell wheat, wheat ready, for sale, contract, stored wheat, field numbers, plates."
+            }
+        },
+        "ui#4": {
+            "caption": {
+                "step": 4,
+                "heading": "And in the shop",
+                "text": "Search boxes in the shop, construction and Settings > Controls too."
+            }
+        }
+    }
+}

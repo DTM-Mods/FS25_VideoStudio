@@ -1,0 +1,15 @@
+{
+    "mod": "FS25_PigBarnWithRobot",
+    "kind": "building",
+    "save": 5,
+    "target": "PigBarnWithRobot",
+    "plan": "building",
+    "title": "Pig Barn With Feeding Robot (GEA)",
+    "thumbnail": {"text": "1,500 pigs, fed by a robot", "accent": "robot"},
+    "sections": {
+        "orbit": {"caption": {"heading": "Room for 1,500 pigs", "text": "A big Hörmann barn with a GEA feeding robot."}},
+        "pushin": {"caption": {"heading": "Four hoppers", "text": "Base feed 50%, grains 25%, protein 20%, root crops 5%; fed every hour."}},
+        "crane": {"caption": {"heading": "Nothing stops at once", "text": "An empty hopper only stops its own share of the feed."}},
+        "flyby": {"caption": {"heading": "Feed alley", "text": "Tip bought pig food or loose crops; drop straw bales for bedding."}}
+    }
+}

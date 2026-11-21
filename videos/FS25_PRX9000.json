@@ -1,0 +1,15 @@
+{
+    "mod": "FS25_PRX9000",
+    "kind": "building",
+    "save": 5,
+    "target": "PRX9000",
+    "plan": "building",
+    "title": "PRX Silo Extensions Pro Edition",
+    "thumbnail": {"text": "Up to 10 million litres", "accent": "10 million"},
+    "sections": {
+        "orbit": {"caption": {"heading": "Three sizes", "text": "PRX6000, 8000 and 9000: 6, 8 and 10 million litres, 19 to 32 m tall."}},
+        "pushin": {"caption": {"heading": "Built like the real thing", "text": "18 m wide corrugated steel, ring seams, a caged ladder, a concrete pad."}},
+        "crane": {"caption": {"heading": "75 crops", "text": "Onions, bananas and coffee cherries included."}},
+        "timelapse": {"caption": {"heading": "Silo Extensions", "text": "In the shop under Buildings."}}
+    }
+}

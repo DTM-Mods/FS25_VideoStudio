@@ -1,0 +1,23 @@
+{
+    "name": "",
+    "font": null,
+    "colors": {
+        "dark": "#14181C",
+        "panel": "#232A31",
+        "accent": "#E0A030",
+        "accent_soft": "#F0C878",
+        "light": "#F5F5F2",
+        "soft": "#9AA7B2"
+    },
+    "intro": null,
+    "outro": null,
+    "logo": null,
+    "watermark": null,
+    "thumbnail_overlay": null,
+    "byline": "",
+    "site": "",
+    "mod_url": "",
+    "links": {},
+    "tags": ["Farming Simulator 25", "FS25", "FS25 mods"],
+    "hashtags": "#FS25 #FarmingSimulator25"
+}

@@ -1,0 +1,74 @@
+{
+    "mod": "FS25_AssistedTreeFelling",
+    "kind": "script",
+    "save": 5,
+    "target": "H21D",
+    "steps": [
+        "vsEnter",
+        "vsPower",
+        "vsLight golden",
+        "vsShot pov dur=8",
+        "vsShot static dist=1.7 dur=22 keys=hold@q:18 at=1",
+        "vsShot pov dur=20 keys=hold@q:16 at=1",
+        "vsShot pov dur=8 keys=lshift+q at=1.5",
+        "vsShot crane e1=30 dist=1.3 dur=9",
+        "vsLight off"
+    ],
+    "title": "Assisted Tree Felling",
+    "kicker": "Farming Simulator 25 mod: one key fells the tree",
+    "thumbnail": {
+        "text": "Hold Q, fell the tree",
+        "accent": "Q",
+        "shot": "static"
+    },
+    "sections": {
+        "pov#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Drive up to a tree",
+                "text": "The ring: yellow in reach, green on the tree, red too thick."
+            },
+            "chapter": "How it works"
+        },
+        "static": {
+            "caption": {
+                "step": 2,
+                "heading": "Hold Q",
+                "text": "The crane swings over, lowers the head, cuts and lifts the tree."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Q"
+                    ],
+                    "label": "Hold: fell the tree",
+                    "at": 0.8
+                }
+            ]
+        },
+        "pov#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Centre the crane",
+                "text": "Folds it back and swings it straight ahead, ready to drive on."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Left Shift",
+                        "Q"
+                    ],
+                    "label": "Centre",
+                    "at": 1.2
+                }
+            ]
+        },
+        "pov#2": {
+            "caption": {
+                "heading": "From the cab",
+                "text": "Let go of Q to stop at any time."
+            }
+        }
+    },
+    "note": "the user parked the H21D in front of a good tree in savegame 5 (2026-11-21 08:17): film it where it stands"
+}

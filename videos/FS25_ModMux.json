@@ -1,0 +1,42 @@
+{
+    "mod": "FS25_ModMux",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsLight golden",
+        "vsShot ui dur=10 run=vsMenu:ModMux at=0.3",
+        "vsShot ui dur=9 keys=down,down,down at=1.5",
+        "vsShot ui dur=4 run=vsMenu:close at=2.5",
+        "vsLight off"
+    ],
+    "title": "ModMux",
+    "kicker": "Farming Simulator 25 mod: when mods collide",
+    "thumbnail": {
+        "text": "When mods collide",
+        "accent": "collide"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Where mods meet",
+                "text": "CONFLICTS: every function two mods both change, and who cuts off whom."
+            },
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "You decide",
+                "text": "One winner, both run, or a pecking order; applied at the next load."
+            }
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "And more tabs",
+                "text": "Live, vehicle, keys, errors, performance per mod, profiles; safe mode."
+            }
+        }
+    }
+}

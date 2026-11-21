@@ -1,0 +1,40 @@
+{
+    "mod": "FS25_Brandt_Landroller_591_Pro",
+    "kind": "vehicle",
+    "save": 5,
+    "move": true,
+    "steps": [
+        "vsSpawn LandRoller",
+        "wait 4",
+        "vsEnter",
+        "vsLight golden",
+        "vsShowcase",
+        "vsShot colors",
+        "vsLight off"
+    ],
+    "title": "Brandt LandRoller 591A",
+    "thumbnail": {
+        "text": "Brandt LandRoller 591A",
+        "accent": "591A"
+    },
+    "sections": {
+        "orbit": {
+            "caption": {
+                "heading": "27.7 m land roller",
+                "text": "Needs 275 hp; up to 14 km/h."
+            }
+        },
+        "pullback": {
+            "caption": {
+                "heading": "Three tools in one",
+                "text": "Ring drums, spiral grass-roller drums, or bladed mulcher drums."
+            }
+        },
+        "crane": {
+            "caption": {
+                "heading": "Your colors",
+                "text": "Main and rim color options; Brandt blue as standard."
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "mod": "FS25_AlpacaPRX500",
+    "kind": "building",
+    "save": 5,
+    "target": "AlpacaPRX500",
+    "plan": "building",
+    "title": "Alpaca PRX500",
+    "thumbnail": {"text": "Alpaca PRX500 barn", "accent": "PRX500"},
+    "sections": {
+        "orbit": {"caption": {"heading": "A big alpaca barn", "text": "Hörmann-based, with a pasture you shape yourself."}},
+        "pushin": {"caption": {"heading": "Shearing room", "text": "In the old milking stall; fleece goes out on pallets."}},
+        "crane": {"caption": {"heading": "Pallet garage", "text": "Six rows, stacked two high; 2,000 or 5,000 l pallets."}},
+        "flyby": {"caption": {"heading": "Better fleece", "text": "Straw bedding and hay: up to 5% more."}}
+    }
+}

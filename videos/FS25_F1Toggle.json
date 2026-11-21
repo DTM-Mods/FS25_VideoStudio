@@ -1,0 +1,84 @@
+{
+    "mod": "FS25_F1Toggle",
+    "kind": "script",
+    "save": 5,
+    "target": "Condor",
+    "probe": "filmed by hand: the user shows it during one 90 s clip (the in-game Settings page can't be opened from code)",
+    "steps": [
+        "vsEnter",
+        "vsShot ui dur=90"
+    ],
+    "title": "F1 Toggle",
+    "kicker": "Farming Simulator 25 mod: your F1 box, your way",
+    "thumbnail": {
+        "text": "Hide what you don't need",
+        "accent": "Hide",
+        "second": 45
+    },
+    "cuts": [
+        {
+            "from": 4,
+            "to": 13,
+            "chapter": "How it works",
+            "caption": {
+                "step": 1,
+                "heading": "The F1 box",
+                "text": "Every key hint the game and your mods add: a long list."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "F1"
+                    ],
+                    "label": "Help box",
+                    "at": 0.6
+                }
+            ]
+        },
+        {
+            "from": 20,
+            "to": 32,
+            "caption": {
+                "step": 2,
+                "heading": "ESC > Settings > General",
+                "text": "F1 Toggle adds a section at the end of the General tab."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Esc"
+                    ],
+                    "label": "Menu",
+                    "at": 0.6
+                }
+            ]
+        },
+        {
+            "from": 34,
+            "to": 43,
+            "caption": {
+                "step": 3,
+                "heading": "Shown or Hidden",
+                "text": "Every key hint seen this session, from the game and mods like AutoDrive and Courseplay."
+            }
+        },
+        {
+            "from": 43,
+            "to": 52,
+            "caption": {
+                "step": 4,
+                "heading": "Kept for every savegame",
+                "text": "Saved in modSettings/FS25_F1Toggle; f1tShowAll brings everything back."
+            }
+        },
+        {
+            "from": 54,
+            "to": 64,
+            "caption": {
+                "step": 5,
+                "heading": "Only what you need",
+                "text": "Hidden hints are gone from the F1 box. The keys still work."
+            }
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+# Checks the mod on every push and pull request, and publishes a release when you push a tag
+# v<version in modDesc.xml>. The steps live in DTM-Mods/.github (.github/workflows/fs25-mod.yml).
+# This file is the same in every DTM mod repository; only the settings under "with:" differ.
+#
+# Try a release without publishing it: Actions > Build > Run workflow, enter the tag (v1.2.0.0).
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      test-tag:
+        description: "Try a release without publishing it: the tag, e.g. v1.2.0.0 (leave empty to just build)"
+        type: string
+        default: ""
+
+permissions:
+  contents: write     # publish releases on tags
+  actions: write      # start the Discord release post
+
+jobs:
+  mod:
+    uses: DTM-Mods/.github/.github/workflows/fs25-mod.yml@main
+    with:
+      test-tag: ${{ inputs.test-tag || '' }}
+      # Two zips: the mod for the mods folder, and the tools (recorder, cutter, editor) to unzip anywhere
+      modhub: false                  # a modder's tool for single player; it never goes to ModHub (probes the game with pcall)
+      zips: FS25_VideoStudio VideoStudio_Tools
+      build-command: python3 "$CI_PY" build --out dist --name FS25_VideoStudio $NO_MODHUB && python3 tools/build_tools_zip.py dist
+      install-note: "**Install:** put `FS25_VideoStudio.zip` into `Documents/My Games/FarmingSimulator2025/mods` without unzipping or renaming it (single player only, it never goes on a server). `VideoStudio_Tools.zip` is the rest: the recorder, the cutter and the editor that makes the finished video. Unzip it anywhere; it needs Python 3 with Pillow, numpy and soundcard (`pip install pillow numpy soundcard`) and ffmpeg (`winget install Gyan.FFmpeg`). See the README."

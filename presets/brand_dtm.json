@@ -1,0 +1,28 @@
+{
+    "name": "DTM Mods",
+    "font": "_brand/font/Outfit.ttf",
+    "colors": {
+        "dark": "#143326",
+        "panel": "#1F4D3A",
+        "accent": "#D9A441",
+        "accent_soft": "#E9C77A",
+        "light": "#F4F1E8",
+        "soft": "#7FA48A"
+    },
+    "intro": "_brand/youtube/dtm-intro.mp4",
+    "outro": "_brand/youtube/dtm-outro.mp4",
+    "outro_still": "_brand/youtube/dtm-outro-still.png",
+    "logo": "_brand/png/dtm-mark-256.png",
+    "watermark": "_brand/youtube/watermark-150.png",
+    "thumbnail_overlay": "_brand/youtube/thumbnail-overlay.png",
+    "byline": "DTM Mods",
+    "site": "dtmmods.com",
+    "mod_url": "https://dtmmods.com/mods/{slug}/",
+    "links": {
+        "More mods": "https://dtmmods.com",
+        "Source code": "https://github.com/DTM-Mods",
+        "Support us": "https://ko-fi.com/dtmmods"
+    },
+    "tags": ["Farming Simulator 25", "FS25", "FS25 mods", "Farming Simulator 25 mods", "DTM Mods"],
+    "hashtags": "#FS25 #FarmingSimulator25 #FS25mods"
+}

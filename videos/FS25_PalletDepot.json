@@ -1,0 +1,95 @@
+{
+    "mod": "FS25_PalletDepot",
+    "kind": "building",
+    "save": 5,
+    "target": "PalletDepot",
+    "steps": [
+        "vsEnter",
+        "vsLight golden",
+        "vsSun on",
+        "vsShot pushin e0=8 d0=1.5 d1=0.9",
+        "vsShot orbit e0=14 dist=1.0 dur=16",
+        "vsShot ui dur=10 keys=rshift+p at=1.2",
+        "vsShot ui dur=8 keys=x at=2",
+        "vsShot ui dur=8 keys=e at=2",
+        "vsShot ui dur=4 keys=esc at=2",
+        "vsShot drone d0=1.6 d1=1.2",
+        "vsLight off"
+    ],
+    "title": "Logistics Hub",
+    "kicker": "Farming Simulator 25 mod: pallets in, goods out",
+    "thumbnail": {
+        "text": "Your own logistics hub",
+        "accent": "logistics"
+    },
+    "sections": {
+        "pushin": {
+            "caption": {
+                "heading": "Two hubs",
+                "text": "Food & Drinks and Textiles & Goods; 84 rack places fill up as you deliver."
+            }
+        },
+        "orbit": {
+            "caption": {
+                "heading": "Per product",
+                "text": "Store, spawn, distribute to your productions, or sell every hour."
+            }
+        },
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "The overview",
+                "text": "Every production: inputs, recipes, finances, logistics, schedule."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Right Shift",
+                        "P"
+                    ],
+                    "label": "Overview",
+                    "at": 1.0
+                }
+            ],
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Inputs and outputs",
+                "text": "What each production needs and makes."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "X"
+                    ],
+                    "label": "Inputs / outputs",
+                    "at": 1.7
+                }
+            ]
+        },
+        "ui#3": {
+            "caption": {
+                "step": 3,
+                "heading": "Logistics",
+                "text": "Spawn goods, auto spawn, a daily report at 06:00."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "E"
+                    ],
+                    "label": "Logistics",
+                    "at": 1.7
+                }
+            ]
+        },
+        "drone": {
+            "caption": {
+                "heading": "Ready for AutoDrive",
+                "text": "Import the hub's routes into AutoDrive."
+            }
+        }
+    }
+}

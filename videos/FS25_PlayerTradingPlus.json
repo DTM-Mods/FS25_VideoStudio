@@ -1,0 +1,59 @@
+{
+    "mod": "FS25_PlayerTradingPlus",
+    "kind": "building",
+    "save": 5,
+    "target": "PlayerTradingPlus",
+    "steps": [
+        "vsEnter",
+        "vsLight golden",
+        "vsSun on",
+        "vsShot pushin e0=8 d0=1.5 d1=0.9",
+        "vsShot orbit e0=14 dist=1.0 dur=16",
+        "vsShot ui dur=9 run=vsMenu:UWMFrame at=0.3",
+        "vsShot ui dur=8 keys=down,down at=2",
+        "vsShot ui dur=4 run=vsMenu:close at=2.5",
+        "vsShot drone d0=1.6 d1=1.2",
+        "vsLight off"
+    ],
+    "title": "Player Trading+ Pro Edition",
+    "kicker": "Farming Simulator 25 mod: trade between farms",
+    "thumbnail": {
+        "text": "Trade between farms",
+        "accent": "trade"
+    },
+    "sections": {
+        "pushin": {
+            "caption": {
+                "heading": "Community Depot",
+                "text": "Slurry tank, manure pit, silos with a loading pipe, a pallet pad, an office."
+            }
+        },
+        "orbit": {
+            "caption": {
+                "heading": "Shared by farms",
+                "text": "Offer membership to other farms; the upkeep is shared."
+            }
+        },
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Player Trading+ page",
+                "text": "Incoming, outgoing and standing orders, with summary cards."
+            },
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Invoices",
+                "text": "Invoice a farm, request one, or set a standing buy or sell order."
+            }
+        },
+        "drone": {
+            "caption": {
+                "heading": "Collect at the depot",
+                "text": "Goods come out of the silo pipe and onto the pallet pad."
+            }
+        }
+    }
+}

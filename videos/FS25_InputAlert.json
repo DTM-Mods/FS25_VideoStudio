@@ -1,0 +1,38 @@
+{
+    "mod": "FS25_InputAlert",
+    "kind": "script",
+    "save": 5,
+    "steps": [
+        "vsLight golden",
+        "vsShot ui dur=9 run=vsMenu:ingameMenuProduction at=0.3",
+        "vsShot ui dur=9 keys=down,down at=1.5 keys2=right at2=4.5",
+        "vsShot ui dur=4 run=vsMenu:close at=2.5",
+        "vsLight off"
+    ],
+    "title": "Input Alert",
+    "kicker": "Farming Simulator 25 mod: see what runs low",
+    "thumbnail": {
+        "text": "See what runs low",
+        "accent": "low"
+    },
+    "sections": {
+        "ui#1": {
+            "caption": {
+                "step": 1,
+                "heading": "Low inputs in red",
+                "text": "In Production Chains, materials at 10% or less are highlighted."
+            },
+            "chapter": "How it works"
+        },
+        "ui#2": {
+            "caption": {
+                "step": 2,
+                "heading": "Status per input",
+                "text": "Green: 10+ cycles. Yellow: 2 to 10. Red: under 2."
+            }
+        }
+    },
+    "with_mods": [
+        "FS25_InputAlert"
+    ]
+}

@@ -1,0 +1,40 @@
+{
+    "mod": "FS25_ProEdition_BoxTruck",
+    "kind": "vehicle",
+    "save": 5,
+    "move": true,
+    "steps": [
+        "vsSpawn Box Truck",
+        "wait 4",
+        "vsEnter",
+        "vsLight golden",
+        "vsShowcase",
+        "vsShot colors",
+        "vsLight off"
+    ],
+    "title": "Box Truck Pro Edition",
+    "thumbnail": {
+        "text": "Box Truck Pro Edition",
+        "accent": "Pro Edition"
+    },
+    "sections": {
+        "orbit": {
+            "caption": {
+                "heading": "Volvo FH16 8x4",
+                "text": "Four engines, 425 to 600 hp."
+            }
+        },
+        "pullback": {
+            "caption": {
+                "heading": "Curtain sides",
+                "text": "The curtain gathers at the rear, the boards fold, the posts slide."
+            }
+        },
+        "crane": {
+            "caption": {
+                "heading": "Barn doors and belts",
+                "text": "Rear barn doors, nine belts, five curtain designs."
+            }
+        }
+    }
+}
