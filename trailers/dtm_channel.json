@@ -1,0 +1,164 @@
+{
+    "name": "DTM_Mods_channel_trailer",
+    "title": "DTM Mods",
+    "kicker": "Free mods for Farming Simulator 25",
+    "line": "Made and tested on our own server",
+    "end_card": {
+        "heading": "Free downloads",
+        "url": "dtmmods.com"
+    },
+    "thumbnail": {
+        "text": "Free FS25 mods",
+        "accent": "Free",
+        "shot": 0,
+        "at": 0.3
+    },
+    "music_seed": 7,
+    "description": "DTM Mods: free Farming Simulator 25 mods, made and tested on our own server. Machines, buildings and the tools we play with every day: AutoDrive and Courseplay, assisted tree felling, construction tools, a better F1 box, farm inventory, monthly expense sheets and more.\n\nEvery mod: https://dtmmods.com",
+    "shots": [
+        {
+            "mod": "FS25_RopaTiger6S_ProEdition",
+            "clip": "04_arc",
+            "from": 0.4,
+            "seconds": 5.0,
+            "title": true
+        },
+        {
+            "mod": "FS25_Brandt_Landroller_591_Pro",
+            "clip": "02_static",
+            "from": 1.8,
+            "seconds": 10.0,
+            "speed": 2.2,
+            "zoom": [
+                0.22,
+                0.25,
+                0.5
+            ]
+        },
+        {
+            "mod": "FS25_PRX9000",
+            "clip": "05_flyby",
+            "from": 1.5,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_PX150XL",
+            "clip": "05_crane",
+            "from": 2.0,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_AlpacaPRX500",
+            "clip": "02_orbit",
+            "from": 6.0,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_ProEdition_BoxTruck",
+            "clip": "06_flyby",
+            "from": 1.5,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_PigBarnWithRobot",
+            "clip": "06_drone",
+            "from": 3.0,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_RoadsideStand",
+            "clip": "05_timelapse",
+            "from": 1.0,
+            "seconds": 8.0,
+            "speed": 2.5
+        },
+        {
+            "mod": "FS25_AssistedTreeFelling",
+            "clip": "02_static",
+            "from": 8.0,
+            "seconds": 9.0,
+            "speed": 1.8
+        },
+        {
+            "mod": "FS25_MassTreeExterminator",
+            "clip": "04_ui",
+            "from": 90.0,
+            "seconds": 8.0,
+            "speed": 1.6
+        },
+        {
+            "mod": "FS25_DeployablesAnywhere",
+            "clip": "06_ui",
+            "from": 50.0,
+            "seconds": 5.0
+        },
+        {
+            "mod": "FS25_AutoDrive",
+            "clip": "17_ui",
+            "from": 2.0,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_Courseplay",
+            "clip": "22_ui",
+            "from": 2.0,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_ADAddOn",
+            "clip": "07_ui",
+            "from": 21.0,
+            "seconds": 3.5,
+            "zoom": [
+                0.6,
+                0.36,
+                0.4
+            ]
+        },
+        {
+            "mod": "FS25_BananaRegrow",
+            "clip": "05_ui",
+            "from": 91.0,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_BetterDigitalDisplay",
+            "clip": "02_ui",
+            "from": 33.0,
+            "seconds": 3.5
+        },
+        {
+            "mod": "FS25_ServerLagWatch",
+            "clip": "01_ui",
+            "from": 7.0,
+            "seconds": 4.0
+        },
+        {
+            "mod": "FS25_RecoupMoney",
+            "clip": "03_ui",
+            "from": 72.0,
+            "seconds": 4.0
+        },
+        {
+            "mod": "FS25_FarmInventory",
+            "clip": "02_ui",
+            "from": 2.0,
+            "seconds": 3.0
+        },
+        {
+            "mod": "FS25_MonthlyExpenseSheet",
+            "clip": "03_ui",
+            "from": 2.0,
+            "seconds": 3.0
+        },
+        {
+            "mod": "FS25_PRX9000",
+            "clip": "06_drone",
+            "from": 2.0,
+            "seconds": 7.0,
+            "end_card": true,
+            "label": ""
+        }
+    ],
+    "outro_seconds": 8
+}

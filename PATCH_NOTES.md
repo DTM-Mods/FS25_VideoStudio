@@ -15,6 +15,9 @@
   `max=` (an open clip's longest length).
 - Editor: `zoom` on a section (a small HUD filling the frame); the cutter pads the sound when it ends early.
 - The runner switches Video Studio on for the run in a savegame that doesn't have it (put back afterwards).
+- Trailers: `python tools/make_trailer.py trailers/<spec>.json [--sheet]` cuts the best moments of many mods'
+  videos into one (the DTM Mods channel trailer is `trailers/dtm_channel.json`); each shot carries its mod's
+  name; `--sheet` shows the chosen moments first. The brand outro can be shortened (`outro_seconds`).
 
 ## 0.1.0.0 (not released yet)
 

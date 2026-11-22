@@ -483,13 +483,18 @@ class Renderer:
         ffmpeg(args)
         return {"path": out, "seconds": probe(out)["duration"] or dur, "name": name}
 
-    def brand_clip(self, name, src):
+    def brand_clip(self, name, src, seconds=None):
+        """The brand's intro or outro; seconds: shorter, fading to black at the end (a trailer's outro)."""
         out = os.path.join(self.work, name + ".mkv")
         W, H, fps = self.W, self.H, self.fps
         dur = probe(src)["duration"]
+        fade = ""
+        if seconds and seconds < dur:
+            dur = float(seconds)
+            fade = f",fade=t=out:st={max(0.0, dur - 0.8):.3f}:d=0.8"
         ffmpeg(["-i", src, "-f", "lavfi", "-t", f"{dur:.3f}", "-i", "anullsrc=r=48000:cl=stereo",
                 "-filter_complex", f"[0:v]fps={fps},scale={W}:{H}:flags=lanczos:force_original_aspect_ratio=decrease,"
-                f"pad={W}:{H}:(ow-iw)/2:(oh-ih)/2,setsar=1,format=yuv420p,settb=AVTB[v]",
+                f"pad={W}:{H}:(ow-iw)/2:(oh-ih)/2,setsar=1,format=yuv420p{fade},settb=AVTB[v]",
                 "-map", "[v]", "-map", "1:a"] + self.seg_args() + ["-c:a", "pcm_s16le", "-t", f"{dur:.3f}", out])
         return {"path": out, "seconds": dur, "name": name}
 
@@ -573,7 +578,7 @@ class Renderer:
         if sb.get("outro") and self.brand.get("outro"):
             trans.append(("fadeblack", 0.8))
             self.echo("  outro")
-            segs.append(self.brand_clip("99_outro", self.brand["outro"]))
+            segs.append(self.brand_clip("99_outro", self.brand["outro"], sb.get("outro_seconds")))
             segs[-1]["kind"] = "outro"
         return segs, trans
 
