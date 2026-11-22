@@ -275,7 +275,8 @@ def follow_log(path, since, watch, should_stop, poll=0.3, echo=print):
 # ---------------------------------------------------------------- the game process and window
 def game_pids():
     out = subprocess.run(["tasklist", "/FI", f"IMAGENAME eq {PROCESS}", "/FO", "CSV", "/NH"],
-                         capture_output=True, text=True).stdout
+                         capture_output=True, text=True,
+                         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)).stdout   # no console box flashing
     pids = set()
     for row in out.splitlines():
         cells = [c.strip().strip('"') for c in row.split(",")]

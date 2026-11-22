@@ -1,5 +1,21 @@
 # Patch notes
 
+## 0.1.0.25
+
+- Filming by hand: a step window beside the game window (never in the video) shows and says each step and
+  waits for you: say "next", "go" or "done" or press Right Shift + 9; "pause" / Right Shift + 8, "go on".
+  A bar shows the whole set: which mod, how far, about how long. The clip ends after your last step, and the
+  video is cut where you really went on (plans: `"hand"` steps, `vsShot ui dur=0 max=900 hand=1`).
+- `vsUnfold [fold]`: the machine unfolded the way it works (or folded again), also during a clip
+  (`run=vsUnfold`); color copies stay unfolded like the original, or alternate open and closed
+  (`vsShot colors fold=alt`).
+- `vsSave`: the game saves while you play (what a mod shows during a save can be filmed).
+- `vsMove` only picks a place the camera sees from every side (a shed next to it hid a roller).
+- Clip options: `keep=` (another mod's HUD stays in a menu clip), `help=0` (the F1 box hidden),
+  `max=` (an open clip's longest length).
+- Editor: `zoom` on a section (a small HUD filling the frame); the cutter pads the sound when it ends early.
+- The runner switches Video Studio on for the run in a savegame that doesn't have it (put back afterwards).
+
 ## 0.1.0.0 (not released yet)
 
 First version.

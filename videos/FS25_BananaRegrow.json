@@ -1,0 +1,86 @@
+{
+    "mod": "FS25_BananaRegrow",
+    "kind": "script",
+    "save": 1,
+    "probe": "filmed by hand: the step window shows and says each step and waits for you (say next / go / done, or Right Shift + 9); the clip ends after the last one. No game sound in the video: the spoken steps come out of the speakers the recorder listens to",
+    "steps": [
+        "vsShot ui dur=0 max=900 hand=1 help=0"
+    ],
+    "title": "Banana Regrow",
+    "kicker": "Farming Simulator 25 mod: a whole banana plantation in one click",
+    "thumbnail": {
+        "text": "A whole plantation, one click",
+        "accent": "one click",
+        "second": 84
+    },
+    "hand": [
+        {
+            "at": 0,
+            "do": "Go to your banana plantation, carrying the machete",
+            "why": "Ripe plants if you have them. Walking there is not in the video."
+        },
+        {
+            "at": 40,
+            "do": "Look along the plants",
+            "why": "Stand still a moment",
+            "caption": {
+                "step": 1,
+                "heading": "Your plantation",
+                "text": "Ripe bananas, and plants waiting to be cut back."
+            },
+            "chapter": "How it works"
+        },
+        {
+            "at": 48,
+            "do": "Shift+P, then Landscaping > Banana Regrow",
+            "caption": {
+                "step": 2,
+                "heading": "Construction > Landscaping",
+                "text": "Pick Banana Regrow."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Shift",
+                        "P"
+                    ],
+                    "label": "Construction",
+                    "at": 0.6
+                }
+            ]
+        },
+        {
+            "at": 62,
+            "do": "Click one corner, then the opposite corner",
+            "why": "Yellow markers: ripe. Green: to cut back.",
+            "caption": {
+                "step": 3,
+                "heading": "Mark the area",
+                "text": "Ripe plants get yellow markers, plants to cut back green ones."
+            }
+        },
+        {
+            "at": 80,
+            "do": "Click again to harvest and cut back",
+            "caption": {
+                "step": 4,
+                "heading": "One click",
+                "text": "Every ripe plant harvested, every plant cut back."
+            }
+        },
+        {
+            "at": 92,
+            "do": "Read the result, then look at the plants",
+            "caption": {
+                "step": 5,
+                "heading": "Straight to the washing station",
+                "text": "The bananas go to your nearest washing station; the plants regrow from next month."
+            }
+        },
+        {
+            "at": 106,
+            "do": "Press ESC to leave the construction menu"
+        }
+    ],
+    "game_audio": 0
+}

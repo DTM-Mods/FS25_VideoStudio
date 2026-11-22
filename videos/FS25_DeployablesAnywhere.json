@@ -1,0 +1,130 @@
+{
+    "mod": "FS25_DeployablesAnywhere",
+    "kind": "script",
+    "save": 1,
+    "probe": "filmed by hand: the step window shows and says each step and waits for you (say next / go / done, or Right Shift + 9); the clip ends after the last one. No game sound in the video: the spoken steps come out of the speakers the recorder listens to",
+    "steps": [
+        "vsShot ui dur=0 max=900 hand=1"
+    ],
+    "title": "Deployables Anywhere",
+    "kicker": "Farming Simulator 25 mod: place it where the game says no",
+    "thumbnail": {
+        "text": "Place it anywhere",
+        "accent": "anywhere",
+        "second": 36
+    },
+    "hand": [
+        {
+            "at": 0,
+            "do": "Shift+P and pick something big enough to see: a shed, a silo or a big sign",
+            "why": "Hold it over land you don't own, or where the game shows red. Keep the camera close."
+        },
+        {
+            "at": 20,
+            "do": "Hold it where it shows red",
+            "why": "Not your land, or in the way",
+            "caption": {
+                "step": 1,
+                "heading": "The game says no",
+                "text": "Red: not your land, or something in the way."
+            },
+            "chapter": "How it works"
+        },
+        {
+            "at": 28,
+            "do": "Press Ctrl+Shift+P, then click to place it",
+            "caption": {
+                "step": 2,
+                "heading": "Free placement",
+                "text": "Ctrl+Shift+P, and it goes where you want it."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Ctrl",
+                        "Shift",
+                        "P"
+                    ],
+                    "label": "Free placement",
+                    "at": 0.6
+                }
+            ]
+        },
+        {
+            "at": 44,
+            "do": "Pick another big item; nudge it with Ctrl+Shift+Arrow keys",
+            "caption": {
+                "step": 3,
+                "heading": "To the centimetre",
+                "text": "Ctrl+Shift+Arrows nudge it 10 cm; the first nudge locks it in place."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Ctrl",
+                        "Shift",
+                        "Arrows"
+                    ],
+                    "label": "Nudge 10 cm",
+                    "at": 0.6
+                }
+            ],
+            "speed": 2.0
+        },
+        {
+            "at": 62,
+            "do": "Ctrl+Shift+PageUp/PageDown to raise or lower, Ctrl+Shift+, or . to turn it",
+            "caption": {
+                "step": 4,
+                "heading": "Height and angle",
+                "text": "5 cm up or down, 1 degree turns."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Ctrl",
+                        "Shift",
+                        "PgUp"
+                    ],
+                    "label": "Raise 5 cm",
+                    "at": 0.6
+                }
+            ],
+            "speed": 2.0
+        },
+        {
+            "at": 80,
+            "do": "Click to place it",
+            "caption": {
+                "step": 5,
+                "heading": "Placed",
+                "text": "Exactly there, at that height and angle."
+            }
+        },
+        {
+            "at": 90,
+            "do": "On a slope: Ctrl+Shift+G, then place something",
+            "caption": {
+                "step": 6,
+                "heading": "No flattening",
+                "text": "Ctrl+Shift+G keeps the ground as it is."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Ctrl",
+                        "Shift",
+                        "G"
+                    ],
+                    "label": "No flattening",
+                    "at": 0.6
+                }
+            ]
+        },
+        {
+            "at": 108,
+            "do": "Press ESC to leave the construction menu"
+        }
+    ],
+    "game_audio": 0
+}

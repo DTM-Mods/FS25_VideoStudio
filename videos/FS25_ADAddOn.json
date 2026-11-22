@@ -1,0 +1,90 @@
+{
+    "mod": "FS25_ADAddOn",
+    "kind": "script",
+    "save": 1,
+    "probe": "filmed by hand: the step window shows and says each step and waits for you (say next / go / done, or Right Shift + 9); the clip ends after the last one. No game sound in the video: the spoken steps come out of the speakers the recorder listens to",
+    "steps": [
+        "vsShot ui dur=0 max=900 hand=1 keep=FS25_AutoDrive help=0"
+    ],
+    "title": "AutoDrive Add-On",
+    "kicker": "Farming Simulator 25 mod: more jobs for AutoDrive",
+    "thumbnail": {
+        "text": "More jobs for AutoDrive",
+        "accent": "AutoDrive",
+        "second": 40
+    },
+    "hand": [
+        {
+            "at": 0,
+            "do": "Get in a truck or a tractor with a trailer",
+            "why": "One that AutoDrive can drive"
+        },
+        {
+            "at": 20,
+            "do": "Left Alt + Numpad 0 to show the AutoDrive HUD, middle mouse for the cursor",
+            "caption": {
+                "step": 1,
+                "heading": "A bar on AutoDrive",
+                "text": "The green ADAddOn bar sits on top of the AutoDrive HUD."
+            },
+            "chapter": "How it works",
+            "keys": [
+                {
+                    "keys": [
+                        "Left Alt",
+                        "Num 0"
+                    ],
+                    "label": "AutoDrive HUD",
+                    "at": 0.6
+                }
+            ],
+            "zoom": [
+                0.6,
+                0.36,
+                0.4
+            ]
+        },
+        {
+            "at": 36,
+            "do": "Open the ADAddOn mode menu, slowly hover the modes",
+            "caption": {
+                "step": 2,
+                "heading": "Six jobs",
+                "text": "Fill robots, milk transport, bale collection, top it off, refuel and repair."
+            },
+            "zoom": [
+                0.6,
+                0.36,
+                0.4
+            ]
+        },
+        {
+            "at": 54,
+            "do": "Pick Top It Off and click ON",
+            "caption": {
+                "step": 3,
+                "heading": "Top It Off",
+                "text": "Loads until the trailer is really full, then delivers."
+            },
+            "zoom": [
+                0.6,
+                0.36,
+                0.4
+            ]
+        },
+        {
+            "at": 66,
+            "do": "If you have targets set: start AutoDrive (Pickup and Deliver)",
+            "caption": {
+                "step": 4,
+                "heading": "Then AutoDrive drives",
+                "text": "The job ends by itself and the button goes back to OFF."
+            }
+        },
+        {
+            "at": 86,
+            "do": "Middle mouse to hide the cursor; done"
+        }
+    ],
+    "game_audio": 0
+}

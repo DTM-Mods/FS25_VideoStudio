@@ -357,6 +357,12 @@ check(T.otherDrew == 0 and T.drawn == 2, f"menu clip: another mod's text hidden,
 run(5)
 lua.execute("T.drawn = 0; FS25_Other.renderText(0, 0, 1, 'Courseplay')")
 check(T.drawn == 1 and lua.eval("rawget(FS25_Other, 'renderText')") is None, "the other mod's drawing back after the clip")
+reset_frames()
+console('vsShot', 'ui', 'dur=1', 'keep=FS25_Other')
+run(0.5)
+lua.execute("T.drawn = 0; FS25_Other.renderText(0, 0, 1, 'AutoDrive HUD')")
+check(lua.eval("T.drawn") == 1, "keep=: the mod named there still draws in a menu clip (a HUD the filmed mod sits on)")
+run(5)
 console('vsFolder')
 lua.execute("g_modManager.getActiveMods = T.mods")
 
@@ -383,6 +389,15 @@ c = VS.makeClip(VS, 'pushin', VS.parseOptions(VS, lua.table('a0=90', 'd1=0.8', '
 check(c['from'].a == 90 and c.to.d == 0.8 and c.ease == 'linear', 'raw pose keys a0= d1=, ease')
 c = VS.makeClip(VS, 'follow', VS.parseOptions(VS, lua.table('dur=0')))
 check(c.untilStopped and c.dur == 300, 'dur=0: until stopped')
+c = VS.makeClip(VS, 'ui', VS.parseOptions(VS, lua.table('dur=0', 'max=900', 'hand=FS25_X')))
+check(c.untilStopped and c.dur == 900, 'dur=0 max=900: a long one filmed by hand (hand= is for the runner, ignored)')
+lua.execute("T.help = true; function T.hud:setInputHelpVisible(v) T.help = v end")
+reset_frames()
+console('vsShot', 'ui', 'dur=1', 'help=0')
+run(0.5)
+check(lua.eval("T.help") is False, 'help=0: the F1 box hidden while the clip rolls')
+run(5)
+check(lua.eval("T.help") is True, 'help=0: the F1 box back after the clip')
 
 # ---------------------------------------------------------------- showcase
 reset_frames()
@@ -529,6 +544,17 @@ check(r.startswith('Moved Tiger 6S') and moved >= 40 and T.tiger.physics, f'vsMo
 check(console('vsMove').startswith('Already moved'), 'only once')
 r = console('vsMove', 'back')
 check(abs(n.x - home[0]) < 1e-6 and abs(n.z - home[1]) < 1e-6, f'vsMove back: where it was ({r})')
+# a shed outside the cleared box but where the camera goes round the first place: not that place
+T.obstacles[2] = lua.table()
+T.obstacles[2].id, T.obstacles[2].x, T.obstacles[2].y, T.obstacles[2].z, T.obstacles[2].r = 89, home[0], 102, home[1] + 40 + 30, 3
+lua.execute("VideoStudio.SPOT_VIEW = 8")
+r = console('vsMove')
+spot = (n.x, n.z)
+check(r.startswith('Moved Tiger 6S') and math.dist(spot, (home[0], home[1] + 40)) > 1 and 'may be in some views' not in r,
+      f'vsMove: not where a shed is in the camera views ({r}, at {spot[0] - home[0]:.0f}, {spot[1] - home[1]:.0f})')
+console('vsMove', 'back')
+T.obstacles[2].x = home[0] + 1000
+lua.execute("VideoStudio.SPOT_VIEW = 3.0")
 G.overlapBox = None
 T.obstacles = lua.table()
 
@@ -577,6 +603,28 @@ check(r.startswith('Already in Tiger') and lua.eval('g_localPlayer.vehicle == T.
 lua.execute("T.tiger.motorOn = false; function T.tiger:setIsTurnedOn(on) self.turnedOn = on end")
 r = console('vsPower')
 check(T.tiger.motorOn and T.tiger.turnedOn, f'vsPower: engine running, machine switched on ({r})')
+lua.execute("T.saved = 0; function g_currentMission:saveSavegame() T.saved = T.saved + 1 end")
+r = console('vsSave')
+check(lua.eval("T.saved") == 1 and r == 'Saving the game', f'vsSave: the game saves now ({r})')
+lua.execute("g_currentMission.saveSavegame = nil")
+lua.execute("""
+T.tiger.spec_foldable = { turnOnFoldDirection = -1, foldingParts = { { animationName = 'fold' } }, foldAnimTime = 1, foldMoveDirection = 0 }
+function T.tiger:setFoldDirection(d) T.foldDir = d end
+""")
+r = console('vsUnfold')
+check(lua.eval("T.foldDir") == -1 and r.startswith('Unfolding 1 part'), f'vsUnfold: the way it works ({r})')
+r = console('vsUnfold', 'fold')
+check(lua.eval("T.foldDir") == 1 and r.startswith('Folding'), f'vsUnfold fold: folded again ({r})')
+lua.execute("""
+T.copy = { spec_foldable = { foldingParts = { { animationName = 'fold' } } }, times = {} }
+function T.copy:setAnimationTime(name, t) self.times[name] = t end
+function T.tiger:getAnimationTime(name) return 0 end
+T.tiger.spec_foldable.foldAnimTime, T.tiger.spec_foldable.foldMoveDirection = 0, -1
+VideoStudio:mirrorFold(T.copy, T.tiger)
+""")
+check(lua.eval("T.copy.times.fold") == 0 and lua.eval("T.copy.spec_foldable.foldMoveDirection") == -1,
+      'a color copy: unfolded at once like the original')
+lua.execute("T.tiger.spec_foldable = nil; T.tiger.setFoldDirection = nil; T.tiger.getAnimationTime = nil")
 lua.execute("T.tiger.setIsTurnedOn = nil; T.tiger.turnedOn = nil; VideoStudio.target = nil")
 
 # ---------------------------------------------------------------- building on foot: the player model hidden

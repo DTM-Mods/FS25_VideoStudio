@@ -969,17 +969,19 @@ function VS:setQuiet(on, keep)
             end
         end
         if keep ~= nil then
+            local keepSet = {}
+            for _, k in ipairs(type(keep) == "table" and keep or { keep }) do keepSet[k] = true end
             if g_modManager ~= nil and g_modManager.getActiveMods ~= nil then
                 local ok, mods = pcall(g_modManager.getActiveMods, g_modManager)
                 for _, mod in ipairs(ok and mods or {}) do
                     local name = mod.modName
-                    local env = (name ~= nil and name ~= keep and name ~= self.MOD_NAME) and field(g, name) or nil
+                    local env = (name ~= nil and not keepSet[name] and name ~= self.MOD_NAME) and field(g, name) or nil
                     if type(env) == "table" and env ~= g and env ~= _G then
                         for _, fname in ipairs(self.QUIET_FUNCTIONS) do mute(env, fname) end
                     end
                 end
             end
-            local ad = keep ~= "FS25_AutoDrive" and findAutoDriveDrawing(g) or nil
+            local ad = not keepSet["FS25_AutoDrive"] and findAutoDriveDrawing(g) or nil
             if ad ~= nil then
                 for _, name in ipairs(self.QUIET_AUTODRIVE) do mute(ad, name) end
             end
@@ -1137,7 +1139,10 @@ function VS:makeClip(shotId, opts)
         anchor = opts.anchor or def.anchor or "subject",
         text = def.text,
     }
-    if opts.dur == 0 or opts.dur == "0" or opts.dur == "until" then clip.dur, clip.untilStopped = self.MAX_CLIP_S, true end
+    if opts.dur == 0 or opts.dur == "0" or opts.dur == "until" then
+        -- until stopped (vsStop / Right Shift + 0); max= seconds for a long one filmed by hand (default 300)
+        clip.dur, clip.untilStopped = math.min(tonumber(opts.max) or self.MAX_CLIP_S, 1800), true
+    end
     local f, t = clip.from, clip.to
     -- angle: where it starts; deg: how far it turns (orbit, arcs); dir -1 the other way
     if opts.angle ~= nil then
@@ -1235,6 +1240,21 @@ function VS:setHud(visible)
     if hud ~= nil and hud.setIsVisible ~= nil then hud:setIsVisible(visible) end
 end
 
+-- help=0 on a clip: the game's F1 help box hidden while it rolls (other mods' keys in it are clutter in a
+-- video about one mod); it comes back after the clip as it was
+function VS:setInputHelp(visible)
+    local hud = g_currentMission ~= nil and g_currentMission.hud or nil
+    if hud == nil then return false end
+    if hud.setInputHelpVisible ~= nil then
+        return pcall(hud.setInputHelpVisible, hud, visible) and "setInputHelpVisible"
+    end
+    local ih = hud.inputHelp
+    if ih ~= nil and ih.setVisible ~= nil then
+        return pcall(ih.setVisible, ih, visible) and "inputHelp:setVisible"
+    end
+    return false
+end
+
 function VS:setPlayerHidden(hidden)
     local player = g_localPlayer
     local gc = player ~= nil and player.graphicsComponent or nil
@@ -1306,11 +1326,19 @@ function VS:startClip(item, subject, extra)
         if env ~= nil then clip.timeBefore = { env.currentMonotonicDay, env.currentDay, env.dayTime, env.daysPerPeriod } end
     end
     self:setHud(clip.hud == true)
+    if tonumber(clip.opts.help) == 0 and not self.helpHidden then
+        local how = self:setInputHelp(false)
+        self.helpHidden = how and true or nil
+        log("F1 help box %s", how and ("hidden (" .. how .. ")") or "can't be hidden here")
+    end
     self:setQuiet(false)
     if not clip.hud then
         self:setQuiet(true)
     elseif self.forcedFolder ~= nil then
-        self:setQuiet(true, self.forcedFolder)      -- menus: only the mod being filmed (vsFolder) and the game
+        -- menus: only the mod being filmed (vsFolder), the game, and keep=A+B (a HUD the mod sits on)
+        local keep = { self.forcedFolder }
+        for k in tostring(clip.opts.keep or ""):gmatch("[^+,]+") do table.insert(keep, k) end
+        self:setQuiet(true, keep)
     end
     self:setPlayerHidden(not clip.own)
     -- the START card goes up at once: the camera jump and the streaming happen under it
@@ -1383,11 +1411,15 @@ function VS:tick()
     end
     if clip.state == "settle" then
         if not clip.own then self:applyPose(clip, 0, dt) end
+        -- the game puts a fresh copy back to its start pose a frame or two after loading: folded or
+        -- unfolded like the original again, every frame until the clip rolls
+        self:holdCopies()
         if elapsed >= clip.settleMs then
             clip.state, clip.stateAt, clip.rollStart = "roll", t, t
             self:setMarker(nil)
         end
     elseif clip.state == "roll" then
+        if clip.color ~= nil then self:holdCopies() end
         self:clipKeys(clip, elapsed / 1000)
         local raw = math.min(1, elapsed / (clip.dur * 1000))
         local p = self.EASES[clip.ease](raw)
@@ -1466,6 +1498,10 @@ function VS:finishRun()
     self:showOriginals(true)
     self:setQuiet(false)
     self:setPlayerHidden(false)
+    if self.helpHidden then
+        self:setInputHelp(true)
+        self.helpHidden = nil
+    end
     if r.prevCamera ~= nil and g_cameraManager:getActiveCamera() ~= r.prevCamera then
         g_cameraManager:setActiveCamera(r.prevCamera)
     end
@@ -1755,16 +1791,52 @@ function VS:onCopyLoaded(vehicles, loadingState, args)
         return
     end
     for _, v in ipairs(vehicles) do table.insert(self.copies, v) end
-    self:placeLikeOriginal(vehicles[1], args.like)
+    -- colors fold=alt: open, closed, open ... (a copy loads closed; the open ones match the original)
+    vehicles[1].vsClosed = tostring(clip.opts.fold) == "alt" and (clip.colorIndex or 1) % 2 == 0 or nil
+    self:placeLikeOriginal(vehicles[1], args.like, vehicles[1].vsClosed)
+    vehicles[1].vsLike = args.like
+    if not vehicles[1].vsClosed then self:mirrorFold(vehicles[1], args.like) end
     self:copyDone(clip, false)
 end
 
-function VS:placeLikeOriginal(copy, v)
+-- a copy loads folded: folded or unfolded like the original at once (each folding animation at the
+-- original's time), so an unfolded machine stays unfolded through its colors
+function VS:mirrorFold(copy, like)
+    local a, b = like ~= nil and like.spec_foldable or nil, copy ~= nil and copy.spec_foldable or nil
+    if a == nil or b == nil or copy.setAnimationTime == nil or like.getAnimationTime == nil then return end
+    for i, part in ipairs(a.foldingParts or {}) do
+        local other = (b.foldingParts or {})[i]
+        if part.animationName ~= nil and other ~= nil then
+            local ok, t = pcall(like.getAnimationTime, like, part.animationName)
+            if ok and t ~= nil then pcall(copy.setAnimationTime, copy, other.animationName or part.animationName, t, true) end
+        end
+    end
+    b.foldAnimTime, b.foldMoveDirection = a.foldAnimTime, a.foldMoveDirection
+    if not copy.vsFoldLogged and a.foldAnimTime ~= nil then
+        copy.vsFoldLogged = true
+        log("Copy of %s folded like the original (fold time %.2f)", vehicleName(like), a.foldAnimTime)
+    end
+end
+
+-- the open copies of a color clip: unfolded and every part where the original's is, every frame (unfolded
+-- wings hang on joints and drift back by themselves: copies held only until the clip rolled ended half folded)
+function VS:holdCopies()
+    for _, c in ipairs(self.copies or {}) do
+        if c.vsLike ~= nil and not c.vsClosed and not isGone(c.vsLike) then
+            self:mirrorFold(c, c.vsLike)
+            self:placeLikeOriginal(c, c.vsLike)
+        end
+    end
+end
+
+function VS:placeLikeOriginal(copy, v, rootOnly)
     if copy.setAbsolutePosition == nil then return end
     local x, y, z = getWorldTranslation(v.rootNode)
     local rx, ry, rz = getWorldRotation(v.rootNode)
     local positions
-    if copy.components ~= nil and v.components ~= nil and #copy.components == #v.components then
+    -- every part (component) where the original's is; rootOnly: only the machine's spot, its parts as they
+    -- loaded (a copy that stays folded while the original is unfolded)
+    if not rootOnly and copy.components ~= nil and v.components ~= nil and #copy.components == #v.components then
         positions = {}
         for i, c in ipairs(v.components) do
             positions[i] = { { getWorldTranslation(c.node) }, { getWorldRotation(c.node) } }
@@ -1960,6 +2032,8 @@ VS.SPOT_RADII = { 40, 70, 100, 140, 190, 250, 320, 400 }
 VS.SPOT_ANGLES = 16
 VS.SPOT_FLAT = 1.0           -- metres up or down allowed over the place
 VS.SPOT_CLEARANCE = 16       -- free metres around the machine: room for the camera's moves
+VS.SPOT_VIEW = 3.0           -- the camera's ring: this many times the machine's radius (+4 m) away
+VS.SPOT_VIEWS = 16           -- views tested round the ring, low and high: none may hit a building
 VS.spots = {}
 VS.moved = nil
 
@@ -2128,11 +2202,45 @@ function VS:placeVehicles(vehicles, combos, poses)
     return lost
 end
 
+-- true when the camera's ring round (x, z) sees the place: rays from where the camera stands (low and
+-- high) to the machine hit nothing but the ground (a shed just outside the cleared box hid the
+-- Brandt roller in half its shots)
+function VS:spotViewsClear(x, h0, z, radius, need)
+    if raycastClosest == nil then return true end
+    local ring = math.max(need, radius * self.SPOT_VIEW + 4)
+    local terrain = g_currentMission ~= nil and g_currentMission.terrainRootNode or nil
+    local mask = self:rayMask()
+    for k = 0, self.SPOT_VIEWS - 1 do
+        local b = k * 2 * math.pi / self.SPOT_VIEWS
+        for _, up in ipairs({ 2.5, 9 }) do
+            local px, pz = x + math.sin(b) * ring, z + math.cos(b) * ring
+            local py = math.max(ground(px, pz), h0) + up
+            local dx, dy, dz = x - px, h0 + 1.5 - py, z - pz
+            local len = math.sqrt(dx * dx + dy * dy + dz * dz)
+            local reach = len - radius * 0.5
+            if reach > 1 then
+                self.rayHit = nil
+                pcall(raycastClosest, px, py, pz, dx / len, dy / len, dz / len, reach, "onViewRay", self, mask)
+                if self.rayHit ~= nil and self.rayHit ~= terrain then
+                    local obj = self:nodeObject(self.rayHit)
+                    if obj == nil or not (self.spotOwn or {})[obj] then return false end
+                end
+            end
+        end
+    end
+    return true
+end
+
 function VS:findSpot(vehicles, cx, cz, radius, yaw)
     local saved = self.spots[self:mapId()]
     if saved ~= nil then return { x = saved.x, z = saved.z, yaw = saved.yaw, saved = true } end
-    local need = radius + self.SPOT_CLEARANCE
     self.spotOwn = VS.subjectSet(vehicles)
+    -- first a place the camera sees from every side; else one only cleared round the machine
+    return self:searchSpot(cx, cz, radius, yaw, true) or self:searchSpot(cx, cz, radius, yaw, false)
+end
+
+function VS:searchSpot(cx, cz, radius, yaw, views)
+    local need = radius + self.SPOT_CLEARANCE
     local mask = self:rayMask()
     for _, r in ipairs(self.SPOT_RADII) do
         for i = 0, self.SPOT_ANGLES - 1 do
@@ -2159,7 +2267,8 @@ function VS:findSpot(vehicles, cx, cz, radius, yaw)
                 pcall(overlapBox, x, h0 + 4, z, 0, 0, 0, need, 3.6, need, "onSpotHit", self, mask, true, true, true, false)
                 fits = self.spotHits == 0
             end
-            if fits then return { x = x, z = z, yaw = yaw, distance = r } end
+            if fits and views then fits = self:spotViewsClear(x, h0, z, radius, need) end
+            if fits then return { x = x, z = z, yaw = yaw, distance = r, views = views } end
         end
     end
     return nil
@@ -2367,6 +2476,7 @@ function VS:consoleMove(arg)
     local msg = string.format("Moved %s%s %s", vehicleName(root),
         #vehicles > 1 and string.format(" with %d hitched", #vehicles - 1) or "",
         spot.saved and "to your spot" or string.format("%.0f m to an open, flat place", spot.distance or 0))
+        .. (spot.views == false and " (no place seen clear from every side: something may be in some views)" or "")
         .. (spot.sun and ", facing the light" or "")
     if #lost > 0 then msg = msg .. "; NOT hitched again: " .. table.concat(lost, ", ") end
     log("%s. vsMove back returns it", msg)
@@ -2814,6 +2924,39 @@ end
 function VS:consoleDrive(arg) return self:drive(arg) end
 function VS:consoleWork(arg) return self:work(arg) end
 function VS:consolePower(arg) return self:power(arg) end
+
+-- vsUnfold: the machine being filmed (the target, else what you sit in) and everything hitched to it
+-- unfolded the way it works (Foldable's turnOnFoldDirection, as Courseplay does it); vsUnfold fold folds
+-- it again. A big implement filmed folded shows nothing of what it does.
+function VS:consoleUnfold(arg)
+    local target = self:getTarget()
+    local v = target ~= nil and target.vehicle or self:getSeatVehicle()
+    if v == nil then return "Nothing to unfold: sit in it or vsTarget it" end
+    local root = v.getRootVehicle ~= nil and v:getRootVehicle() or v
+    local vehicles = self:comboOf(root)
+    local fold = arg == "fold"
+    local n = 0
+    for _, o in ipairs(vehicles) do
+        local spec = o.spec_foldable
+        if spec ~= nil and o.setFoldDirection ~= nil and (spec.foldingParts == nil or #spec.foldingParts > 0) then
+            local dir = spec.turnOnFoldDirection or -1
+            if dir == 0 then dir = -1 end
+            if pcall(o.setFoldDirection, o, fold and -dir or dir, true) then n = n + 1 end
+        end
+    end
+    if n == 0 then return "Nothing foldable on " .. vehicleName(root) end
+    return string.format("%s %d part(s) of %s", fold and "Folding" or "Unfolding", n, vehicleName(root))
+end
+
+-- vsSave: the game saves now, while you play (a save from the pause menu happens under the menu, so what
+-- a mod shows during a save, like Server Lag Watch's SERVER SAVE, can't be filmed that way). The runner
+-- puts the savegame back afterwards.
+function VS:consoleSave()
+    local m = g_currentMission
+    if m == nil or m.saveSavegame == nil then return "Can't save here" end
+    local ok, err = pcall(m.saveSavegame, m)
+    return ok and "Saving the game" or ("Save failed: " .. tostring(err))
+end
 function VS:consoleTarget(...) return self:setTarget(joined(...)) end
 function VS:consoleList(...) return self:listObjects(joined(...)) end
 
@@ -2977,7 +3120,7 @@ end
 VS.AUTORUN_FILE = "autorun.xml"
 VS.AUTORUN_MAX_AGE = 20
 VS.AUTORUN_START_S = 12
-VS.AUTORUN_PAUSE = { vsLight = 4, vsWeather = 6, vsEnter = 8, vsMenu = 2, vsKeys = 4, vsDrive = 3, vsWork = 4, vsPower = 4, vsTarget = 1, vsMove = 6, vsSpawn = 10, vsTab = 2 }
+VS.AUTORUN_PAUSE = { vsLight = 4, vsWeather = 6, vsEnter = 8, vsMenu = 2, vsKeys = 4, vsDrive = 3, vsWork = 4, vsPower = 4, vsUnfold = 10, vsTarget = 1, vsMove = 6, vsSpawn = 10, vsTab = 2 }
 
 local function stampMinutes(stamp)
     local y, mo, d, h, mi = tostring(stamp or ""):match("^(%d%d%d%d)(%d%d)(%d%d)_(%d%d)(%d%d)")
@@ -3099,6 +3242,8 @@ VS.COMMANDS = {
     { "vsSun", "Camera moves around a building start on the sun side: on/off (vsMove turns vehicles to the light)", "consoleSun" },
     { "vsSpot", "Here (where you stand, the way you look) is where vsMove puts machines on this map; [clear]", "consoleSpot" },
     { "vsWork", "Unfold, lower and switch on what is hitched: on/off", "consoleWork" },
+    { "vsUnfold", "Unfold the machine being filmed and what is hitched to it, as it works: [fold] folds it again", "consoleUnfold" },
+    { "vsSave", "The game saves now, while you play (filming what a mod shows during a save)", "consoleSave" },
     { "vsPower", "Engine on and the machine switched on (powered keys: a harvester's crane and saw): on/off", "consolePower" },
     { "vsTarget", "What to film: the nearest vehicle, implement or building with [name] in its name; empty = what you sit in", "consoleTarget" },
     { "vsList", "Vehicles, implements and buildings near you, or all with [name] in their name", "consoleList" },

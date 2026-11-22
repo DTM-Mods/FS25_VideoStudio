@@ -1,0 +1,87 @@
+{
+    "mod": "FS25_MassTreeExterminator",
+    "kind": "script",
+    "save": 1,
+    "probe": "filmed by hand: the step window shows and says each step and waits for you (say next / go / done, or Right Shift + 9); the clip ends after the last one. No game sound in the video: the spoken steps come out of the speakers the recorder listens to",
+    "steps": [
+        "vsShot ui dur=0 max=900 hand=1 help=0"
+    ],
+    "title": "Mass Tree Exterminator",
+    "kicker": "Farming Simulator 25 mod: a whole wood gone in one click",
+    "thumbnail": {
+        "text": "Clear a wood in one click",
+        "accent": "one click",
+        "second": 88
+    },
+    "hand": [
+        {
+            "at": 0,
+            "do": "Go to some trees on your own land",
+            "why": "Get out of any vehicle first. Walking there is not in the video."
+        },
+        {
+            "at": 35,
+            "do": "Look at the trees",
+            "why": "Stand still a moment",
+            "caption": {
+                "step": 1,
+                "heading": "Your wood lot",
+                "text": "Every tree on your land, one by one, takes ages to clear."
+            },
+            "chapter": "How it works"
+        },
+        {
+            "at": 43,
+            "do": "Shift+P, then Landscaping > Mass Tree Exterminator",
+            "caption": {
+                "step": 2,
+                "heading": "Construction > Landscaping",
+                "text": "Pick Mass Tree Exterminator."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Shift",
+                        "P"
+                    ],
+                    "label": "Construction",
+                    "at": 0.6
+                }
+            ]
+        },
+        {
+            "at": 58,
+            "do": "Click one corner of the area, then the opposite corner",
+            "why": "Red markers show the trees that go",
+            "caption": {
+                "step": 3,
+                "heading": "Mark the area",
+                "text": "Two clicks: the trees that go get a red marker; the count and cost show at the cursor."
+            }
+        },
+        {
+            "at": 78,
+            "do": "Click once more (Bulldoze area), then Yes",
+            "caption": {
+                "step": 4,
+                "heading": "One click, one bill",
+                "text": "Confirm once: every tree, stump and bush in it goes."
+            }
+        },
+        {
+            "at": 92,
+            "do": "Look over the cleared ground",
+            "why": "Move the camera slowly",
+            "caption": {
+                "step": 5,
+                "heading": "Cleared",
+                "text": "At the bulldozer's own price per tree. Trees on other people's land stay."
+            }
+        },
+        {
+            "at": 106,
+            "do": "Press ESC to leave the construction menu"
+        }
+    ],
+    "game_audio": 0
+}

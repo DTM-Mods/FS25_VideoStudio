@@ -29,6 +29,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import vs_game as game  # noqa: E402
 import vs_cut  # noqa: E402
 import vs_edit  # noqa: E402
+import vs_prompt  # noqa: E402
 from vs_common import DOCS, VIDEOS, MOD_NAME, WIDTH, HEIGHT  # noqa: E402
 
 PLANS = {
@@ -122,6 +123,26 @@ def load_mod_plan(name):
     return plan
 
 
+def hand_cuts(plan):
+    """The cuts of a clip filmed by hand from its steps (vs_prompt.py): each step with a caption is a section,
+    from when it started to when the next one did (or the clip's end); steps without one (walking somewhere) are
+    left out. When it started: hand_times (what the step window saw: Right Shift + 9, pauses), else its "at"."""
+    cues = sorted(plan.get("hand") or [], key=lambda c: c.get("at", 0))
+    real = plan.get("hand_times") or []
+    starts = [float(x) for x in real] if len(real) == len(cues) else [float(c.get("at", 0)) for c in cues]
+    cuts = []
+    for i, c in enumerate(cues):
+        if not c.get("caption"):
+            continue
+        cut = {"from": starts[i] + float(c.get("skip", 0)),
+               "to": starts[i + 1] - 0.2 if i + 1 < len(cues) else None}
+        for k in ("caption", "keys", "chapter", "speed", "zoom"):
+            if k in c:
+                cut[k] = c[k]
+        cuts.append(cut)
+    return cuts
+
+
 def apply_mod_plan(sb, plan):
     """The plan's words and choices on top of an automatic storyboard."""
     for k in ("title", "kicker", "line", "style", "grade", "bars", "music", "music_seed", "game_audio", "hook", "url", "description"):
@@ -130,14 +151,17 @@ def apply_mod_plan(sb, plan):
     if plan.get("thumbnail"):
         sb["thumbnail"].update(plan["thumbnail"])
     secs = sb["sections"]
-    if plan.get("cuts") and secs:
+    cuts = plan.get("cuts") or hand_cuts(plan)
+    if cuts and secs:
         # one long clip filmed by hand, cut into steps: {"from": 4, "to": 12, "caption": {...}, "keys": [...]}
         clip = secs[0]["clip"]
         dur = _clip_seconds(sb, clip)
         secs = []
-        for cut in plan["cuts"]:
+        for cut in cuts:
             s = {k: v for k, v in cut.items() if k not in ("from", "to")}
-            s.update(clip=clip, speed=1.0, trim=[float(cut["from"]), max(0.0, dur - float(cut["to"]))])
+            to = dur - 0.3 if cut.get("to") is None else min(float(cut["to"]), dur - 0.3)
+            s.setdefault("speed", 1.0)
+            s.update(clip=clip, trim=[float(cut["from"]), max(0.0, dur - to)])
             secs.append(s)
         sb["sections"] = secs
         th = sb.setdefault("thumbnail", {})
@@ -243,7 +267,18 @@ def mod_steps(plan):
     steps = with_light(with_target(steps, plan.get("target")), plan.get("light"))
     steps = with_options(steps, plan.get("fov"), plan.get("folder") or plan["mod"])
     move = plan.get("move", not plan.get("steps") and plan.get("plan", "showcase") in MOVE_PLANS)
+    steps = [s.replace(" hand=1", f" hand={plan['mod']}") for s in steps]     # the step window's hand steps
     return with_move(steps, move)
+
+
+def plan_titles(plans):
+    """{clip folder: the mod's title} for the progress bar (it finds the mod by its vsFolder step)."""
+    return {plan_folder(p): p.get("title", p["mod"]) for p in plans}
+
+
+def plan_cues(plans):
+    """{mod: its hand steps} for the step window (vs_prompt.py)."""
+    return {p["mod"]: p["hand"] for p in plans if p.get("hand")}
 
 
 def batch_steps(plans):
@@ -290,7 +325,7 @@ def batch(names, make=True, shorts=False, draft=False, dry_run=False):
     other, one recording; the clips go to each mod's folder and each mod's video is made."""
     if names == ["todo"]:
         names = [os.path.basename(f)[:-5] for f in sorted(glob.glob(os.path.join(MOD_PLANS, "*.json")))]
-        names = [n for n in names if not video_done(load_mod_plan(n)["mod"])]
+        names = [n for n in names if not load_mod_plan(n).get("skip") and not video_done(load_mod_plan(n)["mod"])]
     plans = [load_mod_plan(n) for n in names]
     saves = sorted({p.get("save", 5) for p in plans})
     if len(saves) > 1:
@@ -300,6 +335,14 @@ def batch(names, make=True, shorts=False, draft=False, dry_run=False):
 
     def sort_and_make(clip_dir, st):
         parts = split_clips(clip_dir, plans, st)
+        times = os.path.join(clip_dir, HAND_TIMES)
+        if os.path.isfile(times):
+            with open(times, encoding="utf-8") as f:
+                got = json.load(f)
+            for mod, d in parts.items():
+                if mod in got:
+                    with open(os.path.join(d, HAND_TIMES), "w", encoding="utf-8") as f:
+                        json.dump({mod: got[mod]}, f)
         missing = [p["mod"] for p in plans if p["mod"] not in parts]
         for p in plans:
             if p["mod"] in parts:
@@ -320,10 +363,12 @@ def batch(names, make=True, shorts=False, draft=False, dry_run=False):
         return 1 if missing or bad else 0
 
     return run(saves[0], batch_steps(plans), plan="batch", extra_mods=extra or None, dry_run=dry_run,
-               timeout=max(3600, 900 * len(plans)), on_clips=sort_and_make)
+               timeout=max(3600, 900 * len(plans)), on_clips=sort_and_make, cues=plan_cues(plans),
+               titles=plan_titles(plans))
 
 
 COMPLETE = os.path.join(VIDEOS, "complete")
+HAND_TIMES = "hand_times.json"     # when each step filmed by hand really started, {mod: [seconds]}
 
 
 def complete(mods, echo=print):
@@ -350,9 +395,10 @@ def complete(mods, echo=print):
 
 
 def video_done(mod):
-    """The newest finished video of a mod (complete/ first), or None."""
-    if os.path.isfile(os.path.join(COMPLETE, f"{mod}.mp4")):
-        return os.path.join(COMPLETE, f"{mod}.mp4")
+    """The newest finished video of a mod (complete/ or a folder in it, like complete/Done, first), or None."""
+    done = glob.glob(os.path.join(COMPLETE, f"{mod}.mp4")) + glob.glob(os.path.join(COMPLETE, "*", f"{mod}.mp4"))
+    if done:
+        return done[0]
     vids = []
     for d in glob.glob(os.path.join(VIDEOS, f"*_{mod}")):
         vids += glob.glob(os.path.join(d, "video", "*_1600x900.mp4"))
@@ -362,7 +408,7 @@ def video_done(mod):
 # ---------------------------------------------------------------- run
 def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_open=False, anyway=False, dry_run=False,
         press=True, make=False, make_args=None, start_timeout=900, timeout=3600, keep_changed=False, extra_mods=None,
-        on_clips=None):
+        on_clips=None, cues=None, prompts=True, titles=None):
     from vs_record import Recorder
     saves = {s["index"]: s for s in game.savegames()}
     if save not in saves:
@@ -376,8 +422,9 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
         problems.append(f"{MOD_NAME}.zip isn't in your mods folder: install it first (this script never copies it there)")
     elif have != want:
         problems.append(f"your mods folder has {MOD_NAME} {have}, the repo is {want}: install the new zip first")
-    if not sg["hasMod"]:
-        problems.append(f"savegame{save} ({sg['name']}) doesn't have {MOD_NAME} switched on: add it in that save's mod list")
+    if not sg["hasMod"]:      # switched on for this run only, like with_mods: the savegame backup puts the list back
+        extra_mods = list(extra_mods or []) + [MOD_NAME]
+        print(f"savegame{save} ({sg['name']}) doesn't have {MOD_NAME} on: it is switched on for this run only")
     for p in problems:
         print("! " + p)
     if problems and not anyway:
@@ -407,6 +454,8 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
     if added:
         print(f"Switched on for this run only: {', '.join(added)}")
     started_at = time.time()
+    director = vs_prompt.Director(cues, window=prompts, steps=steps, titles=titles)
+    director.start()
     game.write_autorun(steps, save)
     log_path = os.path.join(DOCS, "log.txt")
     watch = game.LogWatch()
@@ -417,6 +466,7 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
     try:
         game.start_game(save)
         print("Starting the game through Steam ...")
+        director.say("wait", "Starting the game", "Hands off: Steam starts Farming Simulator. Answer a Steam dialog if one comes up.")
         launched = time.time()
         if not game.wait_for(lambda: game.game_running() or game.steam_waiting(launched), 180) or not game.game_running():
             waiting = game.steam_waiting(launched)
@@ -429,6 +479,7 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
         t = threading.Thread(target=game.follow_log, args=(log_path, started_at - 5, watch, stop.is_set), daemon=True)
         t.start()
         presser = game.StartPresser(enabled=press)
+        director.say("wait", "Loading the savegame", "Hands off: the runner presses START by itself.")
         if not game.wait_for(lambda: presser.tick(watch) or watch.started or watch.refused or not game.game_running(), start_timeout):
             print(f"! No autorun after {start_timeout // 60} min. Waiting at a start screen? Is the mod on in that save?")
         elif watch.refused:
@@ -440,7 +491,8 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
             print(f"Game window: {size[0]}x{size[1]}" if size else "! Game window not found")
             recorder.start()
             typer = game.KeyTyper()
-            finished = game.wait_for(lambda: typer.tick(watch) or watch.done or not game.game_running(), timeout, poll=0.3)
+            finished = game.wait_for(lambda: director.tick(watch) or typer.tick(watch) or watch.done
+                                     or not game.game_running(), timeout, poll=0.3)
             if watch.done:
                 result = 0
                 time.sleep(1.0)
@@ -448,6 +500,7 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
                 print(f"! The game ended during step {watch.step} (crash: {game.crash_logged(started_at) or 'none logged'})")
             else:
                 print(f"! Steps not done after {timeout // 60} min")
+        director.say("wait", "Filmed: closing the game", "Hands off a little longer: the game closes and your savegame goes back.")
         meta = recorder.stop()
         if meta:
             print(f"Recorded {meta.get('seconds', 0):.0f} s at {meta.get('width')}x{meta.get('height')}"
@@ -482,6 +535,7 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
         if os.path.isfile(log_path):
             import shutil
             shutil.copy2(log_path, os.path.join(rec_dir, "log.txt"))
+        director.close("Done filming", "The computer is yours. The video is made in the background.")
     print(f"\nlog: {watch.errors} error line(s) (other mods too); {watch.clip_done} clip(s) filmed")
     if not os.path.isfile(os.path.join(rec_dir, "master.mkv")):
         return result or 1
@@ -490,6 +544,10 @@ def run(save, steps, plan="custom", window=(WIDTH, HEIGHT), audio=True, keep_ope
         print("! No clips found in the recording")
         return 1
     clip_dir = os.path.join(rec_dir, "clips")
+    if director.times:
+        with open(os.path.join(clip_dir, HAND_TIMES), "w", encoding="utf-8") as f:
+            json.dump(director.times, f, indent=2)
+        print(f"Your steps started at (seconds into each clip): {director.times}")
     sheet = vs_cut.contact_sheet(clip_dir)
     print(f"\nClips: {clip_dir}\nContact sheet: {sheet}")
     if on_clips is not None:
@@ -533,6 +591,12 @@ def make_video(clip_dir, repo=None, style="showcase", title=None, music="generat
         sb = vs_edit.auto_storyboard(clip_dir, repo=repo, style=(plan or {}).get("style", style), title=title,
                                      music=music, brand=brand)
     if plan is not None:
+        times = os.path.join(clip_dir, HAND_TIMES)
+        if plan.get("hand") and not plan.get("hand_times") and os.path.isfile(times):
+            with open(times, encoding="utf-8") as f:
+                got = json.load(f).get(plan["mod"])
+            if got:
+                plan = dict(plan, hand_times=got)
         sb = apply_mod_plan(sb, plan)
     if seed is not None:
         sb["music_seed"] = seed
@@ -669,7 +733,8 @@ def main(argv=None):
         steps = mod_steps(plan)
         return run(a.save or plan.get("save", 5), steps, plan=plan["mod"], window=tuple(plan.get("window", (WIDTH, HEIGHT))),
                    audio=plan.get("audio", True), dry_run=a.dry_run, make=not a.no_make, extra_mods=plan.get("with_mods"),
-                   make_args={"repo": plan["mod"], "plan": plan, "shorts": a.shorts, "draft": a.draft})
+                   make_args={"repo": plan["mod"], "plan": plan, "shorts": a.shorts, "draft": a.draft},
+                   cues=plan_cues([plan]), titles=plan_titles([plan]))
     if a.cmd == "complete":
         return 0 if complete([load_mod_plan(n)["mod"] for n in a.names]) else 1
     if a.cmd == "batch":

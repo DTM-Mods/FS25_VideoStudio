@@ -1,0 +1,76 @@
+{
+    "mod": "FS25_RecoupMoney",
+    "kind": "script",
+    "save": 1,
+    "probe": "filmed by hand: the step window shows and says each step and waits for you (say next / go / done, or Right Shift + 9); the clip ends after the last one. No game sound in the video: the spoken steps come out of the speakers the recorder listens to",
+    "steps": [
+        "vsShot ui dur=0 max=900 hand=1 help=0"
+    ],
+    "title": "Recoup Money",
+    "kicker": "Farming Simulator 25 mod: get paid for what's inside when you sell",
+    "thumbnail": {
+        "text": "Paid for what's inside",
+        "accent": "Paid",
+        "second": 74
+    },
+    "hand": [
+        {
+            "at": 0,
+            "do": "Go to a silo or storage of yours with goods in it",
+            "why": "The savegame is put back afterwards: the sale won't stick. Walking there is not in the video."
+        },
+        {
+            "at": 35,
+            "do": "Look at the silo",
+            "why": "Show what's in it if you can",
+            "caption": {
+                "step": 1,
+                "heading": "A full silo",
+                "text": "Selling a building normally throws away what's inside."
+            },
+            "chapter": "How it works"
+        },
+        {
+            "at": 45,
+            "do": "Shift+P, then B (demolish), click the silo",
+            "caption": {
+                "step": 2,
+                "heading": "Sell it as usual",
+                "text": "Construction menu, demolish, the silo."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "Shift",
+                        "P"
+                    ],
+                    "label": "Construction",
+                    "at": 0.6
+                }
+            ]
+        },
+        {
+            "at": 60,
+            "do": "Confirm the sale",
+            "caption": {
+                "step": 3,
+                "heading": "Paid for the contents",
+                "text": "Every product at the best price on the map right now."
+            }
+        },
+        {
+            "at": 70,
+            "do": "Wait for the green notification",
+            "caption": {
+                "step": 4,
+                "heading": "Contents sold",
+                "text": "The notification lists each product and the total."
+            }
+        },
+        {
+            "at": 84,
+            "do": "Press ESC to leave the construction menu"
+        }
+    ],
+    "game_audio": 0
+}

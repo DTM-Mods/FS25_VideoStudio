@@ -174,7 +174,9 @@ def cut(rec_dir, out_dir=None, since=None, trim=2, size=(WIDTH, HEIGHT), fps=FPS
     parts.append(f"[0:v]fps={fps},split={n}{vs}" if n > 1 else f"[0:v]fps={fps}[v0]")
     if audio:
         a_s = "".join(f"[a{i}]" for i in range(n))
-        parts.append(f"[1:a]asplit={n}{a_s}" if n > 1 else "[1:a]anull[a0]")
+        # padded with silence: the sound file can end a few seconds before the picture (its recorder stops
+        # first), and a clip whose sound range lies past its end would get no sound at all and fail
+        parts.append(f"[1:a]apad,asplit={n}{a_s}" if n > 1 else "[1:a]apad[a0]")
     out_list = []
     for i, (code, a, b, entry) in enumerate(pairs):
         shot = (entry or {}).get("shot", "clip")

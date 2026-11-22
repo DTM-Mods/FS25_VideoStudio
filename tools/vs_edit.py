@@ -441,13 +441,21 @@ class Renderer:
         return ("," + self.grade if self.grade else "") + _bars_filter(self.sb.get("bars"), self.W, self.H)
 
     # one piece of the video: a clip (trimmed, speed, look, overlays) with its sound, or silence
-    def segment(self, name, src, start, seconds, speed=1.0, overlays=(), look=True, game_audio=None):
+    def segment(self, name, src, start, seconds, speed=1.0, overlays=(), look=True, game_audio=None, zoom=None):
         out = os.path.join(self.work, name + ".mkv")
         info = probe(src)
         dur = seconds / speed
         args = ["-ss", f"{start:.3f}", "-t", f"{seconds:.3f}", "-i", src]
         W, H, fps = self.W, self.H, self.fps
-        chain = [f"[0:v]setpts=(PTS-STARTPTS)/{speed},fps={fps},scale={W}:{H}:flags=lanczos:force_original_aspect_ratio=decrease,"
+        # zoom [x, y, w]: that part of the picture (fractions; as tall as the frame's shape makes it) fills the frame,
+        # e.g. a small HUD in a corner the section is about
+        zoomed = ""
+        if zoom:
+            zx, zy, zw = (float(v) for v in zoom[:3])
+            zw = min(max(zw, 0.1), 1.0)
+            zx, zy = min(max(zx, 0.0), 1.0 - zw), min(max(zy, 0.0), 1.0 - zw)
+            zoomed = f"crop=iw*{zw:.4f}:ih*{zw:.4f}:iw*{zx:.4f}:ih*{zy:.4f},"
+        chain = [f"[0:v]setpts=(PTS-STARTPTS)/{speed},fps={fps},{zoomed}scale={W}:{H}:flags=lanczos:force_original_aspect_ratio=decrease,"
                  f"pad={W}:{H}:(ow-iw)/2:(oh-ih)/2,setsar=1,format=yuv420p" + (self.look() if look else "") + "[b0]"]
         last = "b0"
         for k, ov in enumerate(overlays, start=1):
@@ -551,7 +559,7 @@ class Renderer:
             speed = float(s.get("speed", 1.0))
             ovs = self.overlays_for(i, s, seconds / speed)
             self.echo(f"  {i + 1:2d}/{len(sections)} {s['clip']}" + (f"  [{s['caption']['heading']}]" if s.get("caption") else ""))
-            seg = self.segment(f"{i + 2:02d}_s{i:02d}", src, t0, seconds, speed, ovs)
+            seg = self.segment(f"{i + 2:02d}_s{i:02d}", src, t0, seconds, speed, ovs, zoom=s.get("zoom"))
             seg.update(kind="section", index=i, chapter=s.get("chapter"))
             if segs:
                 t = s.get("transition") or None

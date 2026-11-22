@@ -164,6 +164,106 @@ check(ch is not None and ch[0] == ("00:00", "Intro") and ("01:16", "Colors") in 
 check(all(n != "At work" for _, n in ch), "a chapter under 10 s is left out")
 check(vs_edit.chapters_of(segs[:3], starts[:3], {}, 40) is None, "too short for 3 chapters: none")
 
+# ---------------------------------------------------------------- the step window
+import vs_prompt  # noqa: E402
+tmp = tempfile.mkdtemp()
+t = [100.0]
+cues = {"FS25_X": [{"at": 10, "do": "Press ESC"}, {"at": 0, "do": "Press F1", "why": "The help box"}]}
+class FakeKeys:
+    def __init__(self): self.ev = []
+    def take(self):
+        ev, self.ev = self.ev, []
+        return ev
+    def push(self, e): self.ev.append(e)
+    def stop(self): pass
+
+
+class FakeVoice:
+    def __init__(self): self.said = []
+    def say(self, text): self.said.append(text)
+    def stop(self): pass
+
+
+keys, voice = FakeKeys(), FakeVoice()
+d = vs_prompt.Director(cues, path=os.path.join(tmp, "p.json"), window=False, clock=lambda: t[0], keys=keys, voice=voice,
+                       titles={"FS25_X": "Mod X"})
+w = vs_game.LogWatch()
+shown = lambda: json.load(open(os.path.join(tmp, "p.json")))
+w.step = "3/9 vsShot orbit dur=8"; d.tick(w)
+check(shown()["state"] == "wait" and shown()["title"] == "Filming a slow circle round it" and "Step 3 of 9" in shown()["detail"], f"a filmed step: hands off ({shown()})")
+w.step = "4/9 vsShot ui dur=0 hand=FS25_X"; d.tick(w)
+check(shown()["state"] == "ready" and "Press F1" in shown()["detail"], "the hand step before its clip: get ready, first F1")
+w.clips.append((2, "ui")); d.tick(w)
+t0 = 100 + vs_prompt.LEAD_S
+check(shown()["state"] == "ready" and shown()["until"] == t0, "the clip starts: a countdown to the first step")
+t[0] = 103; d.tick(w)
+check(shown()["state"] == "you" and shown()["title"] == "Press F1" and shown()["next"] == "Press ESC"
+      and shown()["until"] is None and "Right Shift + 9" in shown()["detail"], f"your turn: F1, no countdown ({shown()})")
+check(voice.said == ["Your turn: Mod X. Press F1."], f"the step said out loud ({voice.said})")
+t[0] = 400; d.tick(w)
+check(shown()["title"] == "Press F1", "it waits for you, however long")
+t[0] = 405; keys.ev = ["pause"]; d.tick(w)
+check(shown()["state"] == "pause" and shown()["next"] == "Press F1", "pause: the step stays")
+t[0] = 440; keys.ev = ["resume"]; d.tick(w)
+check(shown()["state"] == "you" and shown()["title"] == "Press F1" and voice.said[-1] == "Press F1.", "go on: the step starts over, said again")
+t[0] = 442; keys.ev = ["next"]; d.tick(w)
+check(shown()["title"] == "Press ESC" and shown()["next"] == "That's the last one" and voice.said[-1] == "Press ESC.", "next: the next step, said")
+check(d.times["FS25_X"] == [round(440 - t0, 2), round(442 - t0, 2)], f"each step's real start, the pause left out ({d.times})")
+t[0] = 450; keys.ev = ["next"]; d.tick(w)
+check(shown()["state"] == "wait" and w.keys == [vs_prompt.STOP_KEYS] and "Hands off" in voice.said[-1],
+      f"next after the last step: the clip is stopped ({w.keys})")
+t[0] = 458; d.tick(w)
+check(w.keys == [vs_prompt.STOP_KEYS] * 2, "still running 6 s later: stopped once more")
+w.step = "5/9 vsLight off"; d.tick(w)
+check(shown()["state"] == "wait", "the next step: hands off again")
+d.close()
+check(shown()["state"] == "exit", "close: the window goes")
+pressed = set()
+k = vs_prompt.Keys(read=lambda vk: vk in pressed)
+pressed.update({0xA1, 0x39}); k.check(); k.check()
+pressed.clear(); k.check()
+pressed.update({0x39}); k.check()
+pressed.update({0xA1, 0x38}); pressed.discard(0x39); k.check()
+check(k.take() == ["next", "pause"], "keys: Right Shift + 9 once per press, 9 alone nothing, Right Shift + 8 pause")
+vt = [0.0]
+v = vs_prompt.Voice(k, clock=lambda: vt[0])
+check([v.feed("ready|0.91"), v.feed("go|0.8"), v.feed("go on|0.8"), v.feed("banana|0.9")] == ["next", "next", "resume", None]
+      and k.take() == ["next", "next", "resume"], "voice: ready / go = next, go on = resume, other words nothing")
+v.speaking = True
+check(v.feed("next|0.9") is None, "voice: deaf while it speaks (its own 'next' doesn't count)")
+v.said(); vt[0] += 0.3
+check(v.feed("next|0.9") is None, "voice: and a moment after")
+vt[0] += 1
+check(v.feed("next|0.9") == "next", "voice: then it listens again")
+k.take()
+check(vs_prompt.place(560, 300, (0, 0, 1600, 900), 5120, 1440)[0] == 1616, "the window right of the game")
+check(vs_prompt.place(560, 300, (0, 0, 1600, 900), 1920, 1300) == (0, 916), "no room on the side: below")
+check(vs_prompt.place(560, 300, (0, 0, 1920, 1080), 1920, 1080) == (1344, 16), "no room at all: over the game's corner")
+steps = fs25_video.mod_steps({"mod": "FS25_X", "steps": ["vsEnter", "vsShot ui dur=90 hand=1"]})
+check(any(s.endswith("hand=FS25_X") for s in steps), f"hand=1 becomes the mod's name ({steps})")
+pr = vs_prompt.Progress(["vsFolder FS25_A", "vsShot orbit dur=10", "vsFolder FS25_B", "vsShot ui dur=40", "quit"],
+                       {"FS25_A": "Mod A", "FS25_B": "Mod B"}, clock=lambda: t[0])
+t[0] = 0; b0 = pr.at("2/5 vsShot orbit dur=10")
+t[0] = 5; b1 = pr.at("2/5 vsShot orbit dur=10")
+t[0] = 6; b2 = pr.at("4/5 vsShot ui dur=40 hand=FS25_B")
+check(b0["label"] == "Mod 1 of 2: Mod A" and b2["label"] == "Mod 2 of 2: Mod B", f"the bar names the mod ({b0}, {b2})")
+check(0 < b0["frac"] < b1["frac"] < b2["frac"] < 1 and b2["left"] > 40, f"the bar fills as the steps go ({b0}, {b1}, {b2})")
+t[0] = 500; d2 = vs_prompt.Director(path=os.path.join(tmp, "q.json"), window=False, clock=lambda: t[0],
+                                    steps=["vsFolder FS25_A", "vsShot orbit"], titles={"FS25_A": "Mod A"})
+w2 = vs_game.LogWatch(); w2.step = "2/2 vsShot orbit"; d2.tick(w2)
+check(json.load(open(os.path.join(tmp, "q.json")))["bar"]["label"] == "Mod A", "the step window gets the bar")
+hc = fs25_video.hand_cuts({"hand": [{"at": 0, "do": "Walk to the trees"},
+                                    {"at": 30, "do": "Shift+P", "caption": {"heading": "Open"}, "keys": [{"keys": ["Shift", "P"]}]},
+                                    {"at": 45, "do": "Click", "caption": {"heading": "Mark"}}]})
+check([(c["from"], c["to"]) for c in hc] == [(30.0, 44.8), (45.0, None)] and hc[0]["keys"][0]["keys"] == ["Shift", "P"],
+      f"hand steps with a caption become the cuts, walking is left out ({hc})")
+hc = fs25_video.hand_cuts({"hand_times": [3.0, 41.5, 50.0], "hand": [{"at": 0, "do": "Walk to the trees"},
+                          {"at": 30, "do": "Shift+P", "caption": {"heading": "Open"}}, {"at": 45, "do": "Click", "caption": {"heading": "Mark"}}]})
+check([(c["from"], c["to"]) for c in hc] == [(41.5, 49.8), (50.0, None)], f"the cuts follow when your steps really started ({hc})")
+pg = vs_prompt.Progress(["vsShot ui dur=0 hand=FS25_X"], cues={"FS25_X": [{"at": 0}, {"at": 90, "len": 6}]})
+check(pg.total > 90, f"the bar counts a hand clip by its steps ({pg.total})")
+shutil.rmtree(tmp, ignore_errors=True)
+
 print()
 if failures:
     print(f"{len(failures)} FAILED")

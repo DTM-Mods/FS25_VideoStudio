@@ -1,0 +1,47 @@
+{
+    "mod": "FS25_ServerLagWatch",
+    "kind": "script",
+    "save": 1,
+    "steps": [
+        "vsShot ui dur=26 run=vsSave at=6 help=0"
+    ],
+    "title": "Server Lag Watch",
+    "kicker": "Farming Simulator 25 mod: what froze the server, and when it saves",
+    "thumbnail": {
+        "text": "What froze the server?",
+        "accent": "froze",
+        "second": 8
+    },
+    "probe": "automatic: vsSave saves during play 6 s into the clip, so SERVER SAVE shows over the game",
+    "cuts": [
+        {
+            "from": 1,
+            "to": 5.8,
+            "chapter": "How it works",
+            "caption": {
+                "step": 1,
+                "heading": "Every save stops the game",
+                "text": "On a server, everyone's game freezes for a moment while it saves."
+            }
+        },
+        {
+            "from": 5.8,
+            "to": 14,
+            "caption": {
+                "step": 2,
+                "heading": "SERVER SAVE",
+                "text": "Big red letters while it saves: nobody wonders why the game stopped."
+            }
+        },
+        {
+            "from": 14,
+            "to": 24.5,
+            "caption": {
+                "step": 3,
+                "heading": "Who froze it",
+                "text": "Every freeze over 250 ms: a notice with the slowest script, and a line in the log."
+            }
+        }
+    ],
+    "game_audio": 0
+}

@@ -1,30 +1,47 @@
 {
     "mod": "FS25_Brandt_Landroller_591_Pro",
     "kind": "vehicle",
-    "save": 5,
-    "move": true,
+    "save": 1,
+    "move": false,
     "steps": [
         "vsSpawn LandRoller",
         "wait 4",
         "vsEnter",
+        "vsUnfold",
         "vsLight golden",
-        "vsShowcase",
-        "vsShot colors",
-        "vsLight off"
+        "vsMove",
+        "vsUnfold fold",
+        "vsShot orbit dur=14",
+        "vsShot static dist=2.2 elev=18 dur=16 run=vsUnfold at=2",
+        "vsShot pushin",
+        "vsShot arc",
+        "vsShot crane",
+        "vsShot flyby",
+        "vsShot drone",
+        "vsShot colors fold=alt",
+        "vsLight off",
+        "vsMove back"
     ],
     "title": "Brandt LandRoller 591A",
     "thumbnail": {
         "text": "Brandt LandRoller 591A",
-        "accent": "591A"
+        "accent": "591A",
+        "shot": "arc"
     },
     "sections": {
         "orbit": {
             "caption": {
-                "heading": "27.7 m land roller",
+                "heading": "Folded for the road",
                 "text": "Needs 275 hp; up to 14 km/h."
             }
         },
-        "pullback": {
+        "static": {
+            "caption": {
+                "heading": "27.7 m unfolded",
+                "text": "The wings swing out to the full working width."
+            }
+        },
+        "arc": {
             "caption": {
                 "heading": "Three tools in one",
                 "text": "Ring drums, spiral grass-roller drums, or bladed mulcher drums."
@@ -35,6 +52,23 @@
                 "heading": "Your colors",
                 "text": "Main and rim color options; Brandt blue as standard."
             }
+        },
+        "colors": {
+            "caption": {
+                "heading": "12 colors",
+                "text": "Open and closed, in every shop color."
+            }
         }
-    }
+    },
+    "note": "folded orbit, then unfolding on camera, then unfolded (user 2026-11-21: 'showing both open and closed is ideal'; vsMove runs while unfolded so the place fits the full width)",
+    "order": [
+        "orbit",
+        "static",
+        "pushin",
+        "arc",
+        "crane",
+        "flyby",
+        "drone",
+        "colors"
+    ]
 }

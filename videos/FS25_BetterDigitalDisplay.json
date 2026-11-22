@@ -1,0 +1,88 @@
+{
+    "mod": "FS25_BetterDigitalDisplay",
+    "kind": "script",
+    "save": 1,
+    "probe": "filmed by hand: the step window shows and says each step and waits for you (say next / go / done, or Right Shift + 9); the clip ends after the last one. No game sound in the video: the spoken steps come out of the speakers the recorder listens to",
+    "steps": [
+        "vsShot ui dur=0 max=900 hand=1 keep=FS25_DigitalDTM help=0"
+    ],
+    "title": "Better Digital Display",
+    "kicker": "Farming Simulator 25 mod: your silos and farm on a glowing screen",
+    "thumbnail": {
+        "text": "Your farm on the wall",
+        "accent": "wall",
+        "second": 40
+    },
+    "hand": [
+        {
+            "at": 0,
+            "do": "Go to one of your Better Digital Display screens",
+            "why": "Stand in front of it, close enough to read it. Walking there is not in the video."
+        },
+        {
+            "at": 35,
+            "do": "Look at the screen",
+            "why": "Stand still",
+            "caption": {
+                "step": 1,
+                "heading": "Your storage, live",
+                "text": "How full, what's in it, rates and alerts."
+            },
+            "chapter": "How it works"
+        },
+        {
+            "at": 45,
+            "do": "Open Monitor settings, then Colours > Amber terminal",
+            "caption": {
+                "step": 2,
+                "heading": "Monitor settings",
+                "text": "Colours, brightness, size, your own title."
+            },
+            "speed": 2.5
+        },
+        {
+            "at": 62,
+            "do": "Monitor settings > Screen shows > Prices",
+            "caption": {
+                "step": 3,
+                "heading": "Prices",
+                "text": "The best price for each product, right on the wall."
+            },
+            "speed": 2.5
+        },
+        {
+            "at": 78,
+            "do": "Monitor settings > Pick the storage > My fields (or Weather)",
+            "caption": {
+                "step": 4,
+                "heading": "The whole farm",
+                "text": "Fields, weather, vehicles, contracts, money, a history chart."
+            },
+            "speed": 2.5
+        },
+        {
+            "at": 94,
+            "do": "Press End and Home to flip through the screens",
+            "caption": {
+                "step": 5,
+                "heading": "Flip through",
+                "text": "Home and End switch screens; Page Up and Down turn pages."
+            },
+            "keys": [
+                {
+                    "keys": [
+                        "End"
+                    ],
+                    "label": "Next screen",
+                    "at": 0.6
+                }
+            ],
+            "speed": 2.5
+        },
+        {
+            "at": 108,
+            "do": "Done with this one"
+        }
+    ],
+    "game_audio": 0
+}

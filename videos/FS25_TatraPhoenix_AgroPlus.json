@@ -5,10 +5,29 @@
     "target": "PHOENIX",
     "plan": "showcase",
     "title": "Tatra Phoenix 6x6 Agro-Truck-Plus",
-    "thumbnail": {"text": "Phoenix 6x6 Agro Plus", "accent": "6x6"},
+    "thumbnail": {
+        "text": "Phoenix 6x6 Agro Plus",
+        "accent": "6x6"
+    },
     "sections": {
-        "orbit": {"caption": {"heading": "Four-wheel steering", "text": "A much tighter turning circle for a 6x6 truck."}},
-        "pullback": {"caption": {"heading": "Up to 757 hp", "text": "Stock 462, Plus 565, Premium 623 or Extreme 757 hp engines."}},
-        "crane": {"caption": {"heading": "Your truck, your way", "text": "Extra headlights, trailer hitch, main, cab and grille colors."}}
-    }
+        "orbit": {
+            "caption": {
+                "heading": "Four-wheel steering",
+                "text": "A much tighter turning circle for a 6x6 truck."
+            }
+        },
+        "pullback": {
+            "caption": {
+                "heading": "Up to 757 hp",
+                "text": "Stock 462, Plus 565, Premium 623 or Extreme 757 hp engines."
+            }
+        },
+        "crane": {
+            "caption": {
+                "heading": "Your truck, your way",
+                "text": "Extra headlights, trailer hitch, main, cab and grille colors."
+            }
+        }
+    },
+    "skip": "the user doesn't want this video (2026-11-21)"
 }
